@@ -21,9 +21,7 @@ struct ControladorPID{
     ControladorPID(float Kp, float Kd, float Ti, float Ta);
     ControladorPID(const ControladorPID &c);
 
-    void Calcula_Erro(float referencia, float saida);
-    float Calcula_Acao_Controle();
+    float Calcula_Acao_Controle(float referencia, float saida);
 };
-
 
 #endif //PID_LIB_HPP

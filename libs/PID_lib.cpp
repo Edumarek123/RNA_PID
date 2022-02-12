@@ -37,19 +37,24 @@ ControladorPID::ControladorPID(const ControladorPID &c){
 
 //---------------------------METODOS---------------------------//
 
-void ControladorPID::Calcula_Erro(float referencia, float saida){
-  Ek[0]=saida-referencia;
-}
-
-float ControladorPID::Calcula_Acao_Controle(){
+float ControladorPID::Calcula_Acao_Controle(float referencia, float saida){
   float a, b ,c, d;
+
+  Ek[0]=saida-referencia;
 
   a=Uk[1];
   b=Ek[0]*(Kp+(Ta/(2*Ti))+(Kd/Ta));
   c=Ek[1]*(Ta/(2*Ti)-Kp-((2*Kd)/Ta));
   d=Ek[2]*(Kd/Ta);
 
-  return (a+b+c+d);
-}
+  Uk[0]=a+b+c+d;
 
-//---------------------------FUNCOES---------------------------//
+  //Atualiza Erros
+  Ek[2]=Ek[1];
+  Ek[1]=Ek[0];
+
+  //Atualiza acoes de controle
+  Uk[1]=Uk[0];
+
+  return Uk[0];
+}
