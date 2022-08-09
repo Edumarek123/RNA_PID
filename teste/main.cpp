@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../matriz_lib.hpp"
-#include "../rede_neural_lib.hpp"
+#include "../libs/matriz_lib.hpp"
+#include "../libs/rede_neural_lib.hpp"
 
 float v[15]={0.697166, -0.946053, -0.676279, 0.240732, -0.776667, -0.633455, 0.306689, 0.893748, 0.776167, -0.316701, 0.74726, -0.0425729, 0.661536, 0.115643, -0.154432};
 
