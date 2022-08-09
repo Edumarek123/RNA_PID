@@ -12,6 +12,8 @@ int main() {
   RedeNeural* NN=new RedeNeural(tam_Lx, tam_Ly, tams_Lh, (sizeof(tams_Lh)/sizeof(tams_Lh[0])), LEARNING_RATE);
   NN->carregar_rede2(v);
 
+  std::cout<<"ola"<<std::endl;
+
   delete NN;
 
   return 0;

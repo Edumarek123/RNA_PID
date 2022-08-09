@@ -4,7 +4,7 @@
 
 #include "rede_neural_lib.hpp"
 #include <stdlib.h>
-
+#include <iostream>
 //------------------CONSTRUTORES&DESTRUTORES-------------------//
 
 RedeNeural::RedeNeural(int tam_Lx, int tam_Ly, int *tams_hl, int num_hl, float alfa_learn){
@@ -73,7 +73,7 @@ void RedeNeural::imprimir_rede() {
 	// 	Serial.print("  | ");
 	// }
 	// Serial.print("\n\n");
-
+	//
 	// Serial.print("Vizualizacao | Entradas | Pesos | Saidas |\n\n");
 	// for (int i = 0; i < tam_layer_x; ++i)
 	// 	std::cout<<"X"<<std::endl;
@@ -124,12 +124,12 @@ void RedeNeural::FeedFoward(Matriz input_layer){
 
 	saidas[0]=new Matriz(multiplicar(*weights_layers[0], input_layer));
 	saidas[0]->somar(*bias_layers[0]);
-	saidas[0]->map("sigmoide");
+	saidas[0]->map((char*)"sigmoide");
 
 	for (int i = 1; i < (numero_layers-1); i++) {
 		saidas[i]=new Matriz(multiplicar(*weights_layers[i], *saidas[i-1]));
 		saidas[i]->somar(*bias_layers[i]);
-		saidas[i]->map("sigmoide");
+		saidas[i]->map((char*)"sigmoide");
 	}
 }
 
@@ -139,12 +139,12 @@ void RedeNeural::Calcula_Erros(Matriz saidas_esperadas) {
 
 	delete erros[numero_layers-2];
 	erros[numero_layers-2]=new Matriz(subtrair(saidas_esperadas, *saidas[numero_layers-2]));
-	erros[numero_layers-2]->multiplicar_Hadamard(map(*saidas[numero_layers-2], "Dsigmoide"));
+	erros[numero_layers-2]->multiplicar_Hadamard(map(*saidas[numero_layers-2], (char*)"Dsigmoide"));
 
 	for (int i=numero_layers-3; i>=0; i--){
 		delete erros[i];
 		erros[i]=new Matriz(multiplicar(transposta(*weights_layers[i+1]), *erros[i+1]));
-		erros[i]->multiplicar_Hadamard(map(*saidas[i], "Dsigmoide"));
+		erros[i]->multiplicar_Hadamard(map(*saidas[i], (char*)"Dsigmoide"));
 	}
 }
 

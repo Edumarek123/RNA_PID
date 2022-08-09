@@ -3,12 +3,10 @@
 clear
 
 
-g++ -o model main.cpp ../matriz_lib.cpp ../rede_neural_lib.cpp
+g++ -o model main.cpp ../libs/matriz_lib.cpp ../libs/rede_neural_lib.cpp
 
-# ./model
+./model
 
-valgrind --leak-check=full --track-origins=yes -v model
+# valgrind --leak-check=full --track-origins=yes -v model
 
 rm model
-
-$SHELL
