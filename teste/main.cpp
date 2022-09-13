@@ -1,4 +1,6 @@
 #include <iostream>
+#include <bits/stdc++.h>
+
 #include "../libs/matriz_lib.hpp"
 #include "../libs/rede_neural_lib.hpp"
 
@@ -25,9 +27,9 @@ int main() {
 
   // Calculating total time taken by the program.
   double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-  cout << "Time taken by program is : " << fixed
-       << time_taken << setprecision(5);
-  cout << " sec " << endl;
+  std::cout << "Time taken by program is : " << std::fixed
+       << time_taken << std::setprecision(5);
+  std::cout << " sec " << std::endl;
 
   delete NN;
 
