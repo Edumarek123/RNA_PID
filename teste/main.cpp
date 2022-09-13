@@ -8,14 +8,26 @@ int main() {
   int tam_Lx=2, tam_Ly=1;
   int tams_Lh[2]={2, 2};
 
+  clock_t start, end;
+
   RedeNeural* NN=new RedeNeural(tam_Lx, tam_Ly, tams_Lh, (sizeof(tams_Lh)/sizeof(tams_Lh[0])), LEARNING_RATE);
 
   Matriz m(2, 1);
   Matriz n(1, 1);
 
+  start = clock();
+
   NN->FeedFoward(m);
   NN->Calcula_Erros(n);
-  // NN->BackPropagation(m);
+  NN->BackPropagation(m);
+
+  end = clock();
+
+  // Calculating total time taken by the program.
+  double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+  cout << "Time taken by program is : " << fixed
+       << time_taken << setprecision(5);
+  cout << " sec " << endl;
 
   delete NN;
 
