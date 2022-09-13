@@ -7,8 +7,8 @@
 
 int main() {
   float LEARNING_RATE=0.5;
-  int tam_Lx=2, tam_Ly=1;
-  int tams_Lh[2]={2, 2};
+  int tam_Lx=20000, tam_Ly=10000;
+  int tams_Lh[2]={20000, 20000};
 
   clock_t start, end;
 
