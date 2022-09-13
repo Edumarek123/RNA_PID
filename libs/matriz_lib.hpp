@@ -5,6 +5,7 @@
 #ifndef MATRIZ_LIB_HPP
 #define MATRIZ_LIB_HPP
 
+
 struct Matriz{
     int linhas;
     int colunas;
@@ -24,7 +25,7 @@ struct Matriz{
     void multiplicar(Matriz m);
     void multiplicar_Hadamard(Matriz m);
     void transposta();
-    void map(char *fun_type);
+    void map(const int fun_type);
     bool vericar_igualdade(Matriz m);
 };
 
@@ -34,9 +35,9 @@ Matriz multiplicar_escalar(Matriz m, float n);
 Matriz multiplicar(Matriz A, Matriz B);
 Matriz multiplicar_Hadamard(Matriz A, Matriz B);
 Matriz transposta(Matriz L);
-Matriz map(Matriz m, char *fun_type);
+Matriz map(Matriz m, const int fun_type);
 bool vericar_igualdade(Matriz A, Matriz B);
 
-float fun_ction(float x, char *fun_type);
+float fun_ction(float x, const int fun_type);
 
 #endif //MATRIZ_LIB_HPP

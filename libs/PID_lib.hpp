@@ -4,27 +4,25 @@
 
 #ifndef PID_LIB_HPP
 #define PID_LIB_HPP
-#include <iostream>
-#include <vector>
 #include"rede_neural_lib.hpp"
 #include"matriz_lib.hpp"
 
 struct ControladorPID{
     //auto tuning
-    RedeNeural r;
+    RedeNeural* RR;
     //parametros controlador
     float Kp;
     float Kd;
     float Ti;
     float Ta;
     //variaveis controlador
-    std::vector<float> Ek; //erro
-    std::vector<float> Uk; //acao de controle
-    std::vector<float> Yk; //Saida
-    std::vector<float> Ck; //sinal se controle
+    float Ek[3]={0, 0, 0}; //erro
+    float Uk[2]={0, 0}; //acao de controle
+    float Yk[2]={0, 0}; //Saida
+    float Ck=0; //sinal se controle
 
     ControladorPID()=delete;
-    ControladorPID(float Kp, float Kd, float Ti, float Ta);
+    ControladorPID(float kP, float kD, float tI, float tA);
     ControladorPID(const ControladorPID &c);
     ~ControladorPID();
 
@@ -32,4 +30,4 @@ struct ControladorPID{
     void Atualiza_Parametros();
 };
 
-#endif //PID_LIB_HPPhttps://github.com/Edumarek123/RNA_PID.git
+#endif //PID_LIB_HPP

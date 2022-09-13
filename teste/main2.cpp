@@ -9,7 +9,7 @@ int main() {
 	float kp=1, kd=1, ti=1, ta=1;
 	ControladorPID* CC=new ControladorPID(kp, kd, ti, ta);
 
-	// CC->RR->imprimir_rede();
+	 //CC->RR->imprimir_rede();
 
 	std::cout<<CC->Calcula_Acao_Controle(1, 5)<<std::endl<<std::endl;
 

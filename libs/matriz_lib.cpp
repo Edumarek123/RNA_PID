@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include <iostream>
 
 //------------------CONSTRUTORES&DESTRUTORES-------------------//
 
@@ -58,11 +59,11 @@ void Matriz::carrega_valores(float n, bool aleatorio){
 }
 
 void Matriz::imprimir(){
-//     for(int i=0;i<linhas;i++){
-//         for(int j=0;j<colunas;j++)
-//             cout<< matriz[i][j] << " ";
-//         cout<<endl;
-//     }
+    for(int i=0;i<linhas;i++){
+        for(int j=0;j<colunas;j++)
+            std::cout<< matriz[i][j] << " ";
+        std::cout<<std::endl;
+    }
 }
 
 void Matriz::somar(Matriz m){
@@ -139,7 +140,7 @@ void Matriz::transposta() {
     colunas=temp_lin;
 }
 
-void Matriz::map(char *fun_type){
+void Matriz::map(const int fun_type){
     float value;
 
     for(int i=0;i<linhas;i++)
@@ -226,7 +227,7 @@ Matriz transposta(Matriz L) {
     return (T);
 }
 
-Matriz map(Matriz m ,char *fun_type){
+Matriz map(Matriz m , const int fun_type){
     float value;
     Matriz resultado(m.linhas, m.colunas);
 
@@ -252,16 +253,16 @@ bool vericar_igualdade(Matriz A, Matriz B){
 
 //----------------------FUNCOES AUXILIARES---------------------//
 
-float fun_ction(float x, char *fun_type){
+float fun_ction(float x, const int fun_type){
     float y;
 
-    if(fun_type=="sigmoide")
+    if(fun_type==0) //"sigmoide"
       y=(1/(1+exp(-x)));
-    else if(fun_type=="seno")
+    else if(fun_type==1) //"seno"
       y=sin(x);
-    else if(fun_type=="cos")
+    else if(fun_type==2) //"cos"
       y=cos(x);
-    else if(fun_type=="Dsigmoide")
+    else if(fun_type==3) //"Dsigmoide"
       y=x*(1-x);
     else
       assert(1==0);

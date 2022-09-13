@@ -16,23 +16,26 @@ RedeNeural::RedeNeural(int tam_Lx, int tam_Ly, int *tams_hl, int num_hl, float a
 
 	tam_layers=(int* )malloc(numero_layers*sizeof(int));
 	tam_layers[0]=tam_layer_x;
+
+
 	for(int i=1;i<numero_layers-1;i++)
 		tam_layers[i]=tams_hl[i-1];
 	tam_layers[numero_layers-1]=tam_layer_y;
 
-	bias_layers=(Matriz** )malloc((numero_layers-2)*sizeof(Matriz*));
+
+	bias_layers=(Matriz** )malloc((numero_layers-1)*sizeof(Matriz*));
 	for(int i=0;i<numero_layers-1;i++)
 		bias_layers[i]=new Matriz(tam_layers[i+1],1);
 
-	weights_layers=(Matriz** )malloc((numero_layers-2)*sizeof(Matriz*));
+	weights_layers=(Matriz** )malloc((numero_layers-1)*sizeof(Matriz*));
 	for(int i=0;i<numero_layers-1;i++)
 		weights_layers[i]=new Matriz(tam_layers[i+1],tam_layers[i]);
 
-	erros=(Matriz** )malloc((numero_layers-2)*sizeof(Matriz*));
+	erros=(Matriz** )malloc((numero_layers-1)*sizeof(Matriz*));
 	for(int i=0;i<numero_layers-1;i++)
 		erros[i]=new Matriz(tam_layers[i+1], 1);
 
-	saidas=(Matriz** )malloc((numero_layers-2)*sizeof(Matriz*));
+	saidas=(Matriz** )malloc((numero_layers-1)*sizeof(Matriz*));
 	for(int i=0;i<numero_layers-1;i++)
 		saidas[i]=new Matriz(tam_layers[i+1], 1);
 }
@@ -55,48 +58,81 @@ RedeNeural::~RedeNeural(){
 //---------------------------METODOS---------------------------//
 
 void RedeNeural::imprimir_rede() {
-	// Serial.print("\nNeural Network Structure( I | Wn | O )\n\n");
-	//
-	// Serial.print("Tamanho layers\n\n");
-	// Serial.print("| X |");
-	// for(int i=0;i<numero_layers-2;i++){
-	// 	Serial.print("HL");
-	// 	Serial.print(i);
-	// 	Serial.print(" | ");
-	//
-	// }
-	//
-	// Serial.print(" Y |\n| ");
-	// for(int i=0;i<numero_layers;i++){
-	// 	Serial.print(" ");
-	// 	Serial.print(tam_layers[i]);
-	// 	Serial.print("  | ");
-	// }
-	// Serial.print("\n\n");
-	//
-	// Serial.print("Vizualizacao | Entradas | Pesos | Saidas |\n\n");
-	// for (int i = 0; i < tam_layer_x; ++i)
-	// 	std::cout<<"X"<<std::endl;
-	// std::cout << std::endl;
-	//
-	// for (int i = 0; i < numero_layers-1; ++i) {
-	// 	weights_layers[i]->imprimir();
-	// 	std::cout << std::endl;
-	// }
-	//
-	// for (int i = 0; i < tam_layer_y; ++i)
-	// 	std::cout<<"Y"<<std::endl;
-	// std::cout << std::endl;
-	//
-	// std::cout << std::endl<< "Bias" << std::endl << std::endl;
-	// for (int i = 0; i < (numero_layers-1); ++i) {
-	// 	bias_layers[i]->imprimir();
-	// 	std::cout << std::endl;
-	// }
+	std::cout << std::endl << "Neural Network Structure( I | Wn | O )" << std::endl << std::endl;
+
+	std::cout<<"Tamanho layers"<<std::endl<<std::endl;
+	std::cout<<"|  X  | ";
+	for(int i=0;i<numero_layers-2;i++)
+		std::cout<<"HL"<<i<<" | ";
+	std::cout<<" Y  |"<<std::endl<<"| ";
+	for(int i=0;i<numero_layers;i++)
+		std::cout<<" "<<tam_layers[i]<<"  | ";
+	std::cout<<std::endl<<std::endl;
+
+	std::cout<<"Vizualizacao | Entradas | Pesos | Saidas |"<<std::endl<<std::endl;
+	for (int i = 0; i < tam_layer_x; ++i)
+		std::cout<<"X"<<std::endl;
+	std::cout << std::endl;
+
+	for (int i = 0; i < numero_layers-1; ++i) {
+		weights_layers[i]->imprimir();
+		std::cout << std::endl;
+	}
+
+	for (int i = 0; i < tam_layer_y; ++i)
+		std::cout<<"Y"<<std::endl;
+	std::cout << std::endl;
+
+	std::cout << std::endl<< "Bias" << std::endl << std::endl;
+	for (int i = 0; i < (numero_layers-1); ++i) {
+		bias_layers[i]->imprimir();
+		std::cout << std::endl;
+	}
 }
 
 
-void RedeNeural::carregar_rede2(float *v){
+// void RedeNeural::imprimir_rede() {
+// 	Serial.print("\nNeural Network Structure( I | Wn | O )\n\n");
+	
+// 	Serial.print("Tamanho layers\n\n");
+// 	Serial.print("| X |");
+// 	for(int i=0;i<numero_layers-2;i++){
+// 		Serial.print("HL");
+// 		Serial.print(i);
+// 		Serial.print(" | ");
+	
+// 	}
+	
+// 	Serial.print(" Y |\n| ");
+// 	for(int i=0;i<numero_layers;i++){
+// 		Serial.print(" ");
+// 		Serial.print(tam_layers[i]);
+// 		Serial.print("  | ");
+// 	}
+// 	Serial.print("\n\n");
+	
+// 	Serial.print("Vizualizacao | Entradas | Pesos | Saidas |\n\n");
+// 	for (int i = 0; i < tam_layer_x; ++i)
+// 		Serial.print("X\n");
+// 	Serial.print("\n");
+	
+// 	for (int i = 0; i < numero_layers-1; ++i) {
+// 		weights_layers[i]->imprimir();
+// 		Serial.print("\n");
+// 	}
+	
+// 	for (int i = 0; i < tam_layer_y; ++i)
+// 		Serial.print("Y\n");
+// 	Serial.print("\n");
+	
+// 	std::cout << std::endl<< "Bias" << std::endl << std::endl;
+// 	for (int i = 0; i < (numero_layers-1); ++i) {
+// 		bias_layers[i]->imprimir();
+// 		Serial.print("\n");
+// 	}
+// }
+
+void RedeNeural::carregar_rede(float *v){
 	long int cont=0;
 
 	for (int i = 0; i < numero_layers - 1; i++)
@@ -119,17 +155,17 @@ void RedeNeural::FeedFoward(Matriz input_layer){
 	//z_l=W_l.a_(l-1)+B
 	//a_l=6z_l
 
-	for (int i = 0; i < (numero_layers-1); i++)
+	for (int i=0;i<(numero_layers-1);i++)
 		delete saidas[i];
 
 	saidas[0]=new Matriz(multiplicar(*weights_layers[0], input_layer));
 	saidas[0]->somar(*bias_layers[0]);
-	saidas[0]->map((char*)"sigmoide");
+	saidas[0]->map(0); //"sigmoide"
 
 	for (int i = 1; i < (numero_layers-1); i++) {
 		saidas[i]=new Matriz(multiplicar(*weights_layers[i], *saidas[i-1]));
 		saidas[i]->somar(*bias_layers[i]);
-		saidas[i]->map((char*)"sigmoide");
+		saidas[i]->map(0); //"sigmoide"
 	}
 }
 
@@ -139,12 +175,12 @@ void RedeNeural::Calcula_Erros(Matriz saidas_esperadas) {
 
 	delete erros[numero_layers-2];
 	erros[numero_layers-2]=new Matriz(subtrair(saidas_esperadas, *saidas[numero_layers-2]));
-	erros[numero_layers-2]->multiplicar_Hadamard(map(*saidas[numero_layers-2], (char*)"Dsigmoide"));
+	erros[numero_layers-2]->multiplicar_Hadamard(map(*saidas[numero_layers-2], 3)); //"Dsigmoide"
 
 	for (int i=numero_layers-3; i>=0; i--){
 		delete erros[i];
 		erros[i]=new Matriz(multiplicar(transposta(*weights_layers[i+1]), *erros[i+1]));
-		erros[i]->multiplicar_Hadamard(map(*saidas[i], (char*)"Dsigmoide"));
+		erros[i]->multiplicar_Hadamard(map(*saidas[i], 3)); //"Dsigmoide"
 	}
 }
 

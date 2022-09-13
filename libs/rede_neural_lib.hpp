@@ -24,7 +24,7 @@ struct RedeNeural{
     ~RedeNeural();
 
     void imprimir_rede();
-    void carregar_rede2(float *v);
+    void carregar_rede(float *v);
 
     void FeedFoward(Matriz input_layer);
     void Calcula_Erros(Matriz saidas_esperadas);
