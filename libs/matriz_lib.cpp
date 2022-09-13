@@ -74,70 +74,12 @@ void Matriz::somar(Matriz m){
             matriz[i][j]+=m.matriz[i][j];
 }
 
-void Matriz::subtrair(Matriz m){
-    assert(linhas==m.linhas && colunas==m.colunas);
-
-    for(int i=0;i<linhas;i++)
-        for(int j=0;j<colunas;j++)
-            matriz[i][j]-=m.matriz[i][j];
-}
-
-void Matriz::multiplicar_escalar(float n){
-    for(int i=0;i<linhas;i++)
-        for(int j=0;j<colunas;j++)
-            matriz[i][j]*=n;
-}
-
-void Matriz::multiplicar(Matriz m){
-    assert(colunas==m.linhas);
-    float result;
-
-    float **matriz_temp=(float**)malloc(linhas*sizeof (float*));
-    for (int i = 0; i < linhas; i++)
-        matriz_temp[i] = (float *) malloc(m.colunas * sizeof(float));
-
-    for(int i=0;i<linhas;i++) {
-        for (int j = 0; j < m.colunas; j++) {
-            result = 0;
-            for(int k=0;k<colunas; k++)
-                result += (matriz[i][k] * m.matriz[k][j]);
-            matriz_temp[i][j] = result;
-        }
-    }
-    for(int i=0;i<linhas;i++)
-        free(matriz[i]);
-    free(matriz);
-
-    colunas=m.colunas;
-    matriz=matriz_temp;
-}
-
 void Matriz::multiplicar_Hadamard(Matriz m){
     assert(linhas==m.linhas && colunas==m.colunas);
 
     for(int i=0;i<linhas;i++)
         for(int j=0;j<colunas;j++)
             matriz[i][j]*=m.matriz[i][j];
-}
-
-void Matriz::transposta() {
-    int temp_lin=linhas;
-
-    float **t=(float**)malloc(colunas*sizeof (float*));
-    for (int i = 0; i < colunas; i++)
-        t[i] = (float *) malloc(linhas * sizeof(float));
-
-    for(int i=0;i<colunas;i++)
-        for(int j=0;j<linhas;j++)
-            t[i][j]=matriz[j][i];
-
-    for(int i=0;i<linhas;i++)
-        free(matriz[i]);
-    free(matriz);
-
-    matriz=t;
-    linhas=colunas;
-    colunas=temp_lin;
 }
 
 void Matriz::map(const int fun_type){
@@ -162,16 +104,6 @@ bool Matriz::vericar_igualdade(Matriz m){
 }
 
 //---------------------------FUNCOES---------------------------//
-
-Matriz somar(Matriz A, Matriz B){
-    assert(A.linhas==B.linhas && A.colunas==B.colunas);
-    Matriz resultado(A.linhas, A.colunas);
-
-    for(int i=0;i<A.linhas;i++)
-        for(int j=0;j<A.colunas;j++)
-            resultado.matriz[i][j]=A.matriz[i][j]+B.matriz[i][j];
-    return (resultado);
-}
 
 Matriz subtrair(Matriz A, Matriz B){
     assert(A.linhas==B.linhas && A.colunas==B.colunas);
@@ -208,16 +140,6 @@ Matriz multiplicar(Matriz A, Matriz B){
     return(resultado);
 }
 
-Matriz multiplicar_Hadamard(Matriz A, Matriz B){
-    assert(A.linhas==B.linhas && A.colunas==B.colunas);
-    Matriz resultado(A.linhas, A.colunas);
-
-    for(int i=0;i<A.linhas;i++)
-        for(int j=0;j<A.colunas;j++)
-            resultado.matriz[i][j]=A.matriz[i][j]*B.matriz[i][j];
-    return (resultado);
-}
-
 Matriz transposta(Matriz L) {
     Matriz T(L.colunas, L.linhas);
 
@@ -249,7 +171,6 @@ bool vericar_igualdade(Matriz A, Matriz B){
                 igualdade=false;
     return(igualdade);
 }
-
 
 //----------------------FUNCOES AUXILIARES---------------------//
 

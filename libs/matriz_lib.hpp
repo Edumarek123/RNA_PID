@@ -20,20 +20,14 @@ struct Matriz{
     void imprimir();
 
     void somar(Matriz m);
-    void subtrair(Matriz m);
-    void multiplicar_escalar(float n);
-    void multiplicar(Matriz m);
     void multiplicar_Hadamard(Matriz m);
-    void transposta();
     void map(const int fun_type);
     bool vericar_igualdade(Matriz m);
 };
 
-Matriz somar(Matriz A, Matriz B);
 Matriz subtrair(Matriz A, Matriz B);
 Matriz multiplicar_escalar(Matriz m, float n);
 Matriz multiplicar(Matriz A, Matriz B);
-Matriz multiplicar_Hadamard(Matriz A, Matriz B);
 Matriz transposta(Matriz L);
 Matriz map(Matriz m, const int fun_type);
 bool vericar_igualdade(Matriz A, Matriz B);
