@@ -28,9 +28,9 @@ struct RedeNeural{
     void imprimir_rede();
     void carregar_rede(float *v);
 
-    void FeedFoward(Matriz input_layer);
-    void Calcula_Erros(Matriz saidas_esperadas);
-    void BackPropagation(Matriz entradas);
+    void FeedFoward(Matriz input_layer); //ok
+    void Calcula_Erros(Matriz saidas_esperadas); //ok
+    void BackPropagation(Matriz entradas);  //ok
 };
 
 #endif //REDE_NEURAL_LIB_HPP

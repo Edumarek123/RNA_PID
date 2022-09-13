@@ -157,13 +157,13 @@ void RedeNeural::FeedFoward(Matriz input_layer){
 	for (int i=0;i<(numero_layers-1);i++)
 		delete saidas[i];
 
-	saidas[0]=new Matriz(multiplicar(*weights_layers[0], input_layer));
-	saidas[0]->somar(*bias_layers[0]);
+	saidas[0]=new Matriz(multiplicar(weights_layers[0], &input_layer));
+	saidas[0]->somar(bias_layers[0]);
 	saidas[0]->map(0); //"sigmoide"
 
 	for (int i = 1; i < (numero_layers-1); i++) {
-		saidas[i]=new Matriz(multiplicar(*weights_layers[i], *saidas[i-1]));
-		saidas[i]->somar(*bias_layers[i]);
+		saidas[i]=new Matriz(multiplicar(weights_layers[i], saidas[i-1]));
+		saidas[i]->somar(bias_layers[i]);
 		saidas[i]->map(0); //"sigmoide"
 	}
 }
@@ -173,13 +173,16 @@ void RedeNeural::Calcula_Erros(Matriz saidas_esperadas) {
 	//e_l = ((W_(l+1))T(erro_(l+1))) 0 d6(z_l)
 
 	delete erros[numero_layers-2];
-	erros[numero_layers-2]=new Matriz(subtrair(saidas_esperadas, *saidas[numero_layers-2]));
-	erros[numero_layers-2]->multiplicar_Hadamard(map(*saidas[numero_layers-2], 3)); //"Dsigmoide"
+	erros[numero_layers-2]=new Matriz(subtrair(&saidas_esperadas, saidas[numero_layers-2]));
+	Matriz aux1(map(saidas[numero_layers-2], 3));
+	erros[numero_layers-2]->multiplicar_Hadamard(&aux1); //"Dsigmoide"
 
 	for (int i=numero_layers-3; i>=0; i--){
 		delete erros[i];
-		erros[i]=new Matriz(multiplicar(transposta(*weights_layers[i+1]), *erros[i+1]));
-		erros[i]->multiplicar_Hadamard(map(*saidas[i], 3)); //"Dsigmoide"
+		Matriz aux2(transposta(weights_layers[i+1]));
+		erros[i]=new Matriz(multiplicar(&aux2, erros[i+1]));
+		Matriz aux3(map(saidas[i], 3));
+		erros[i]->multiplicar_Hadamard(&aux3); //"Dsigmoide"
 	}
 }
 
@@ -187,11 +190,21 @@ void RedeNeural::BackPropagation(Matriz entradas){
 	//∇Cw_l = a_(l-1) * e_l
 	//∇Cb_l = e_l
 	for(int i=numero_layers-2;i>=1;i--){
-		weights_layers[i]->somar(multiplicar_escalar((multiplicar(*erros[i], transposta(*saidas[i-1]))), LEARNING_RATE));
-		bias_layers[i]->somar(multiplicar_escalar(*erros[i], LEARNING_RATE));
+		Matriz aux1(transposta(saidas[i-1]));
+		Matriz aux2(multiplicar(erros[i], &aux1));
+		Matriz aux3(multiplicar_escalar(&aux2, LEARNING_RATE));
+		weights_layers[i]->somar(&aux3);
+
+		Matriz aux4(multiplicar_escalar(erros[i], LEARNING_RATE));
+		bias_layers[i]->somar(&aux4);
 	}
-	weights_layers[0]->somar(multiplicar_escalar((multiplicar(*erros[0], transposta(entradas))), LEARNING_RATE));
-	bias_layers[0]->somar(multiplicar_escalar(*erros[0], LEARNING_RATE));
+	Matriz aux1(transposta(&entradas));
+	Matriz aux2(multiplicar(erros[0], &aux1));
+	Matriz aux3(multiplicar_escalar(&aux2, LEARNING_RATE));
+	weights_layers[0]->somar(&aux3);
+
+	Matriz aux4(multiplicar_escalar(erros[0], LEARNING_RATE));
+	bias_layers[0]->somar(&aux4);
 }
 
 //----------------------FUNCOES AUXILIARES---------------------//

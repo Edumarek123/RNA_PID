@@ -15,7 +15,7 @@ int main() {
 
   NN->FeedFoward(m);
   NN->Calcula_Erros(n);
-  NN->BackPropagation(m);
+  // NN->BackPropagation(m);
 
   delete NN;
 

@@ -33,7 +33,7 @@ Matriz subtrair(Matriz *A, Matriz *B);
 Matriz multiplicar_escalar(Matriz *m, float n);
 Matriz multiplicar(Matriz *A, Matriz *B);
 Matriz transposta(Matriz *L);
-Matriz map(Matriz m, const int fun_type);
+Matriz map(Matriz *m, const int fun_type);
 bool vericar_igualdade(Matriz *A, Matriz *B);
 
 float fun_ction(float x, const int fun_type);

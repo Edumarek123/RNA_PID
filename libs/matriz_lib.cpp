@@ -148,8 +148,8 @@ Matriz map(Matriz *m , const int fun_type){
     float value;
     Matriz resultado(m->linhas, m->colunas);
 
-    for(int i=0;i<resultado->linhas;i++)
-        for(int j=0;j<resultado->colunas;j++){
+    for(int i=0;i<resultado.linhas;i++)
+        for(int j=0;j<resultado.colunas;j++){
             value=m->matriz[i][j];
             resultado.matriz[i][j]=fun_ction(value, fun_type);
         }

@@ -3,7 +3,7 @@
 clear
 
 
-g++ -o model main3.cpp ../libs/matriz_lib.cpp #../libs/rede_neural_lib.cpp #../libs/PID_lib.cpp
+g++ -o model main.cpp ../libs/matriz_lib.cpp ../libs/rede_neural_lib.cpp #../libs/PID_lib.cpp
 
 #./model
 
