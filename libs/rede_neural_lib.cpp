@@ -3,8 +3,7 @@
 //
 
 #include "rede_neural_lib.hpp"
-#include <stdlib.h>
-#include <iostream>
+
 //------------------CONSTRUTORES&DESTRUTORES-------------------//
 
 RedeNeural::RedeNeural(int tam_Lx, int tam_Ly, int *tams_hl, int num_hl, float alfa_learn){
@@ -93,16 +92,16 @@ void RedeNeural::imprimir_rede() {
 
 // void RedeNeural::imprimir_rede() {
 // 	Serial.print("\nNeural Network Structure( I | Wn | O )\n\n");
-	
+
 // 	Serial.print("Tamanho layers\n\n");
 // 	Serial.print("| X |");
 // 	for(int i=0;i<numero_layers-2;i++){
 // 		Serial.print("HL");
 // 		Serial.print(i);
 // 		Serial.print(" | ");
-	
+
 // 	}
-	
+
 // 	Serial.print(" Y |\n| ");
 // 	for(int i=0;i<numero_layers;i++){
 // 		Serial.print(" ");
@@ -110,21 +109,21 @@ void RedeNeural::imprimir_rede() {
 // 		Serial.print("  | ");
 // 	}
 // 	Serial.print("\n\n");
-	
+
 // 	Serial.print("Vizualizacao | Entradas | Pesos | Saidas |\n\n");
 // 	for (int i = 0; i < tam_layer_x; ++i)
 // 		Serial.print("X\n");
 // 	Serial.print("\n");
-	
+
 // 	for (int i = 0; i < numero_layers-1; ++i) {
 // 		weights_layers[i]->imprimir();
 // 		Serial.print("\n");
 // 	}
-	
+
 // 	for (int i = 0; i < tam_layer_y; ++i)
 // 		Serial.print("Y\n");
 // 	Serial.print("\n");
-	
+
 // 	std::cout << std::endl<< "Bias" << std::endl << std::endl;
 // 	for (int i = 0; i < (numero_layers-1); ++i) {
 // 		bias_layers[i]->imprimir();

@@ -2,10 +2,6 @@
 // Created by Edumarek on 26/06/2021.
 //
 #include "matriz_lib.hpp"
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <iostream>
 
 //------------------CONSTRUTORES&DESTRUTORES-------------------//
 
@@ -66,20 +62,20 @@ void Matriz::imprimir(){
     }
 }
 
-void Matriz::somar(Matriz m){
-    assert(linhas==m.linhas && colunas==m.colunas);
+void Matriz::somar(Matriz *m){
+    assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
         for(int j=0;j<colunas;j++)
-            matriz[i][j]+=m.matriz[i][j];
+            matriz[i][j]+=m->matriz[i][j];
 }
 
-void Matriz::multiplicar_Hadamard(Matriz m){
-    assert(linhas==m.linhas && colunas==m.colunas);
+void Matriz::multiplicar_Hadamard(Matriz *m){
+    assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
         for(int j=0;j<colunas;j++)
-            matriz[i][j]*=m.matriz[i][j];
+            matriz[i][j]*=m->matriz[i][j];
 }
 
 void Matriz::map(const int fun_type){
@@ -92,84 +88,83 @@ void Matriz::map(const int fun_type){
         }
 }
 
-bool Matriz::vericar_igualdade(Matriz m){
-    assert(linhas==m.linhas && colunas==m.colunas);
-    bool igualdade=true;
+bool Matriz::vericar_igualdade(Matriz *m){
+    assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
         for(int j=0;j<colunas;j++)
-            if(matriz[i][j]!=m.matriz[i][j])
-                igualdade=false;
-    return(igualdade);
+            if(matriz[i][j]!=m->matriz[i][j])
+              return(false);
+    return(true);
 }
 
 //---------------------------FUNCOES---------------------------//
 
-Matriz subtrair(Matriz A, Matriz B){
-    assert(A.linhas==B.linhas && A.colunas==B.colunas);
-    Matriz resultado(A.linhas, A.colunas);
+Matriz subtrair(Matriz *A, Matriz *B){
+    assert(A->linhas==B->linhas && A->colunas==B->colunas);
+    Matriz resultado(A->linhas, A->colunas);
 
-    for(int i=0;i<A.linhas;i++)
-        for(int j=0;j<A.colunas;j++)
-            resultado.matriz[i][j]=A.matriz[i][j]-B.matriz[i][j];
+    for(int i=0;i<A->linhas;i++)
+        for(int j=0;j<A->colunas;j++)
+            resultado.matriz[i][j]=A->matriz[i][j]-B->matriz[i][j];
     return (resultado);
 }
 
-Matriz multiplicar_escalar(Matriz m, float n){
-    Matriz resultado(m.linhas, m.colunas);
+Matriz multiplicar_escalar(Matriz *m, float n){
+    Matriz resultado(m->linhas, m->colunas);
 
-    for(int i=0;i<m.linhas;i++)
-        for(int j=0;j<m.colunas;j++)
-            resultado.matriz[i][j]=m.matriz[i][j]*n;
+    for(int i=0;i<m->linhas;i++)
+        for(int j=0;j<m->colunas;j++)
+            resultado.matriz[i][j]=m->matriz[i][j]*n;
     return (resultado);
 }
 
-Matriz multiplicar(Matriz A, Matriz B){
-    assert(A.colunas==B.linhas);
-    Matriz resultado(A.linhas, B.colunas);
+Matriz multiplicar(Matriz *A, Matriz *B){
+    assert(A->colunas==B->linhas);
+    Matriz resultado(A->linhas, B->colunas);
     float produto;
 
-    for(int i=0;i<A.linhas;i++) {
-        for (int j = 0; j < B.colunas; j++) {
+    for(int i=0;i<A->linhas;i++) {
+        for (int j = 0; j < B->colunas; j++) {
             produto = 0;
-            for(int k=0;k<A.colunas; k++)
-                produto += (A.matriz[i][k] * B.matriz[k][j]);
+            for(int k=0;k<A->colunas; k++)
+                produto += (A->matriz[i][k] * B->matriz[k][j]);
             resultado.matriz[i][j] = produto;
         }
     }
     return(resultado);
 }
 
-Matriz transposta(Matriz L) {
-    Matriz T(L.colunas, L.linhas);
+Matriz transposta(Matriz *L) {
+    Matriz T(L->colunas, L->linhas);
 
-    for(int i=0;i<L.colunas;i++)
-        for(int j=0;j<L.linhas;j++)
-            T.matriz[i][j]=L.matriz[j][i];
+    for(int i=0;i<L->colunas;i++)
+        for(int j=0;j<L->linhas;j++)
+            T.matriz[i][j]=L->matriz[j][i];
     return (T);
 }
 
-Matriz map(Matriz m , const int fun_type){
+Matriz map(Matriz *m , const int fun_type){
     float value;
-    Matriz resultado(m.linhas, m.colunas);
+    Matriz resultado(m->linhas, m->colunas);
 
-    for(int i=0;i<resultado.linhas;i++)
-        for(int j=0;j<resultado.colunas;j++){
-            value=m.matriz[i][j];
+    for(int i=0;i<resultado->linhas;i++)
+        for(int j=0;j<resultado->colunas;j++){
+            value=m->matriz[i][j];
             resultado.matriz[i][j]=fun_ction(value, fun_type);
         }
     return resultado;
 }
 
-bool vericar_igualdade(Matriz A, Matriz B){
-    assert(A.linhas==B.linhas && A.colunas==B.colunas);
+bool vericar_igualdade(Matriz *A, Matriz *B){
+    assert(A->linhas==B->linhas && A->colunas==B->colunas);
     bool igualdade=true;
 
-    for(int i=0;i<A.linhas;i++)
-        for(int j=0;j<A.colunas;j++)
-            if(A.matriz[i][j]!=B.matriz[i][j])
-                igualdade=false;
-    return(igualdade);
+    for(int i=0;i<A->linhas;i++)
+        for(int j=0;j<A->colunas;j++)
+            if(A->matriz[i][j]!=B->matriz[i][j])
+                return(false);
+    return(true);
 }
 
 //----------------------FUNCOES AUXILIARES---------------------//

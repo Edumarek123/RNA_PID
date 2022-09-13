@@ -5,6 +5,8 @@
 #ifndef REDE_NEURAL_LIB_HPP
 #define REDE_NEURAL_LIB_HPP
 
+#include <iostream>
+#include <stdlib.h>
 #include "matriz_lib.hpp"
 
 struct RedeNeural{
