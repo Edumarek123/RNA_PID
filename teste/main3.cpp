@@ -3,16 +3,15 @@
 
 
 int main() {
-	Matriz **MM;
+	Matriz m1(2, 2);
+	Matriz m2(2, 2);
 
-	MM=(Matriz** )malloc(2*sizeof(Matriz*));
+	m1.imprimir();
+	m2.imprimir();
 
-	MM[0]=new Matriz(2,1);
+	Matriz m3(transposta(&m1));
 
-	for(int i=0;i<1;i++)
-		delete MM[i];	
-
-	free(MM);
+	m3.imprimir();
 
 	return 0;
 }
