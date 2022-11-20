@@ -5,10 +5,13 @@
 #ifndef MATRIZ_LIB_HPP
 #define MATRIZ_LIB_HPP
 
-#include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-#include <iostream> //para o cout
+#if defined __linux__
+    #include<iostream>
+#else
+    #include<Arduino.h>
+#endif
 
 struct Matriz{
     int linhas;
@@ -26,7 +29,7 @@ struct Matriz{
     void somar(Matriz *m);
     void multiplicar_Hadamard(Matriz *m);
     void map(const int fun_type);
-    bool vericar_igualdade(Matriz *m);
+    bool verificar_igualdade(Matriz *m);
 };
 
 Matriz subtrair(Matriz *A, Matriz *B);
@@ -34,7 +37,7 @@ Matriz multiplicar_escalar(Matriz *m, float n);
 Matriz multiplicar(Matriz *A, Matriz *B);
 Matriz transposta(Matriz *L);
 Matriz map(Matriz *m, const int fun_type);
-bool vericar_igualdade(Matriz *A, Matriz *B);
+bool verificar_igualdade(Matriz *A, Matriz *B);
 
 float fun_ction(float x, const int fun_type);
 

@@ -54,6 +54,7 @@ void Matriz::carrega_valores(float n, bool aleatorio){
                 matriz[i][j]=n;
 }
 
+#if defined __linux__
 void Matriz::imprimir(){
     for(int i=0;i<linhas;i++){
         for(int j=0;j<colunas;j++)
@@ -61,6 +62,15 @@ void Matriz::imprimir(){
         std::cout<<std::endl;
     }
 }
+#else
+void Matriz::imprimir(){
+    for(int i=0;i<linhas;i++){
+        for(int j=0;j<colunas;j++)
+            Serial.print(String(matriz[i][j])+" ");
+        Serial.println("");
+    }
+}
+#endif
 
 void Matriz::somar(Matriz *m){
     assert(linhas==m->linhas && colunas==m->colunas);
@@ -88,7 +98,7 @@ void Matriz::map(const int fun_type){
         }
 }
 
-bool Matriz::vericar_igualdade(Matriz *m){
+bool Matriz::verificar_igualdade(Matriz *m){
     assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
@@ -156,9 +166,8 @@ Matriz map(Matriz *m , const int fun_type){
     return resultado;
 }
 
-bool vericar_igualdade(Matriz *A, Matriz *B){
+bool verificar_igualdade(Matriz *A, Matriz *B){
     assert(A->linhas==B->linhas && A->colunas==B->colunas);
-    bool igualdade=true;
 
     for(int i=0;i<A->linhas;i++)
         for(int j=0;j<A->colunas;j++)
