@@ -26,19 +26,24 @@ struct Matriz{
     void carrega_valores(float n, bool aleatorio);
     void imprimir();
 
-    void somar(Matriz *m);
-    void multiplicar_Hadamard(Matriz *m);
-    void map(const int fun_type);
-    bool verificar_igualdade(Matriz *m);
+    void somar(const Matriz *m);
+    void multiplicar_Hadamard(const Matriz *m);
+    void map(const char *fun_type);
+    bool verificar_igualdade(const Matriz *m);
+    void softmax();
+    void binary();
 };
 
-Matriz subtrair(Matriz *A, Matriz *B);
-Matriz multiplicar_escalar(Matriz *m, float n);
-Matriz multiplicar(Matriz *A, Matriz *B);
-Matriz transposta(Matriz *L);
-Matriz map(Matriz *m, const int fun_type);
-bool verificar_igualdade(Matriz *A, Matriz *B);
+Matriz subtrair(const Matriz *A, const Matriz *B);
+Matriz multiplicar_escalar(const Matriz *m, float n);
+Matriz multiplicar(const Matriz *A, const Matriz *B);
+Matriz transposta(const Matriz *L);
+Matriz map(const Matriz *m, const char *fun_type);
+bool verificar_igualdade(const Matriz *A, const Matriz *B);
+Matriz softmax(const Matriz *m);
+Matriz binary(const Matriz *m);
 
-float fun_ction(float x, const int fun_type);
+bool s_iguais(const char *A, const char *B);
+float fun_ction(float x, const char *fun_type);
 
 #endif //MATRIZ_LIB_HPP

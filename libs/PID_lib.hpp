@@ -19,18 +19,19 @@ struct ControladorPID{
     //parametros controlador
     float Kp=0;
     float Kd=0;
-    float Ti=0;
-    float Ta;
+    float Ki=0;
+    float N=1;
+    float Ta=1;
     float min_Uk=0;
     float max_Uk=1;
     //variaveis controlador
     float Ek[3]={0, 0, 0}; //erro
-    float Uk[2]={0, 0}; //acao de controle
+    float Uk[3]={0, 0, 0}; //acao de controle
     float Yk[2]={0, 0}; //Saida
 
     ControladorPID()=delete;
     ControladorPID(float tA, float min_uK, float max_uK);
-    ControladorPID(float kP, float kD, float tI, float tA, float min_uK, float max_uK);
+    ControladorPID(float kP, float kD, float tI, float N, float tA, float min_uK, float max_uK);
     ControladorPID(const ControladorPID &c);
     ~ControladorPID();
 

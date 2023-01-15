@@ -72,7 +72,7 @@ void Matriz::imprimir(){
 }
 #endif
 
-void Matriz::somar(Matriz *m){
+void Matriz::somar(const Matriz *m){
     assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
@@ -80,7 +80,7 @@ void Matriz::somar(Matriz *m){
             matriz[i][j]+=m->matriz[i][j];
 }
 
-void Matriz::multiplicar_Hadamard(Matriz *m){
+void Matriz::multiplicar_Hadamard(const Matriz *m){
     assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
@@ -88,7 +88,7 @@ void Matriz::multiplicar_Hadamard(Matriz *m){
             matriz[i][j]*=m->matriz[i][j];
 }
 
-void Matriz::map(const int fun_type){
+void Matriz::map(const char *fun_type){
     float value;
 
     for(int i=0;i<linhas;i++)
@@ -98,7 +98,7 @@ void Matriz::map(const int fun_type){
         }
 }
 
-bool Matriz::verificar_igualdade(Matriz *m){
+bool Matriz::verificar_igualdade(const Matriz *m){
     assert(linhas==m->linhas && colunas==m->colunas);
 
     for(int i=0;i<linhas;i++)
@@ -108,9 +108,39 @@ bool Matriz::verificar_igualdade(Matriz *m){
     return(true);
 }
 
+void Matriz::softmax(){
+    float soma=0;
+    if(linhas==1){
+        for(int i=0;i<colunas;i++)
+            soma+=exp(matriz[0][i]);
+        
+        for(int i=0;i<colunas;i++)
+            matriz[0][i]=exp(matriz[0][i])/soma;
+    }
+    else if(colunas==1){
+        for(int i=0;i<linhas;i++)
+            soma+=exp(matriz[i][0]);
+        
+        for(int i=0;i<linhas;i++)
+            matriz[i][0]=exp(matriz[i][0])/soma;
+    }
+    else
+        assert(1==0);
+}
+
+void Matriz::binary(){   
+    for(int i=0;i<linhas;i++)
+        for(int j=0;j<colunas;j++){
+            if(matriz[i][j]>0.5)
+                matriz[i][j]=1;
+            else
+                matriz[i][j]=0;
+        }
+}
+
 //---------------------------FUNCOES---------------------------//
 
-Matriz subtrair(Matriz *A, Matriz *B){
+Matriz subtrair(const Matriz *A, const Matriz *B){
     assert(A->linhas==B->linhas && A->colunas==B->colunas);
     Matriz resultado(A->linhas, A->colunas);
 
@@ -120,7 +150,7 @@ Matriz subtrair(Matriz *A, Matriz *B){
     return (resultado);
 }
 
-Matriz multiplicar_escalar(Matriz *m, float n){
+Matriz multiplicar_escalar(const Matriz *m, float n){
     Matriz resultado(m->linhas, m->colunas);
 
     for(int i=0;i<m->linhas;i++)
@@ -129,7 +159,7 @@ Matriz multiplicar_escalar(Matriz *m, float n){
     return (resultado);
 }
 
-Matriz multiplicar(Matriz *A, Matriz *B){
+Matriz multiplicar(const Matriz *A, const Matriz *B){
     assert(A->colunas==B->linhas);
     Matriz resultado(A->linhas, B->colunas);
     float produto;
@@ -145,7 +175,7 @@ Matriz multiplicar(Matriz *A, Matriz *B){
     return(resultado);
 }
 
-Matriz transposta(Matriz *L) {
+Matriz transposta(const Matriz *L) {
     Matriz T(L->colunas, L->linhas);
 
     for(int i=0;i<L->colunas;i++)
@@ -154,7 +184,7 @@ Matriz transposta(Matriz *L) {
     return (T);
 }
 
-Matriz map(Matriz *m , const int fun_type){
+Matriz map(const Matriz *m , const char *fun_type){
     float value;
     Matriz resultado(m->linhas, m->colunas);
 
@@ -166,7 +196,7 @@ Matriz map(Matriz *m , const int fun_type){
     return resultado;
 }
 
-bool verificar_igualdade(Matriz *A, Matriz *B){
+bool verificar_igualdade(const Matriz *A, const Matriz *B){
     assert(A->linhas==B->linhas && A->colunas==B->colunas);
 
     for(int i=0;i<A->linhas;i++)
@@ -176,19 +206,85 @@ bool verificar_igualdade(Matriz *A, Matriz *B){
     return(true);
 }
 
+Matriz softmax(const Matriz *m){
+    Matriz resultado(m->linhas, m->colunas);
+    
+    float soma=0;
+    if(m->linhas==1){
+        for(int i=0;i<m->colunas;i++)
+            soma+=exp(m->matriz[0][i]);
+        
+        for(int i=0;i<m->colunas;i++)
+            resultado.matriz[0][i]=exp(m->matriz[0][i])/soma;
+    }
+    else if(m->colunas==1){
+        for(int i=0;i<m->linhas;i++)
+            soma+=exp(m->matriz[i][0]);
+        
+        for(int i=0;i<m->linhas;i++)
+            resultado.matriz[i][0]=exp(m->matriz[i][0])/soma;
+    }
+    else
+        assert(1==0);
+
+    return resultado;
+}
+
+Matriz binary(const Matriz *m){   
+    Matriz resultado(m->linhas, m->colunas);
+
+    for(int i=0;i<m->linhas;i++)
+        for(int j=0;j<m->colunas;j++){
+            if(m->matriz[i][j]>0.5)
+                resultado.matriz[i][j]=1;
+            else
+                resultado.matriz[i][j]=0;
+        }
+
+    return resultado;
+}
+
 //----------------------FUNCOES AUXILIARES---------------------//
 
-float fun_ction(float x, const int fun_type){
+bool s_iguais(const char *A, const char *B){
+    int i=0;
+
+    while(A[i]!='\0' || B[i]!='\0'){
+        if(A[i]!=B[i])
+            return false;
+        i++;
+    }
+
+    return true;
+}
+
+float fun_ction(float x, const char *fun_type){
     float y;
 
-    if(fun_type==0) //"sigmoide"
+    if(s_iguais(fun_type, "sigmoide")){
       y=(1/(1+exp(-x)));
-    else if(fun_type==1) //"seno"
-      y=sin(x);
-    else if(fun_type==2) //"cos"
-      y=cos(x);
-    else if(fun_type==3) //"Dsigmoide"
+    }
+    else if(s_iguais((const char* )fun_type, "Dsigmoide")){
       y=x*(1-x);
+    }
+    else if(s_iguais(fun_type, "ReLU")){
+        if(x>0)
+            y=x;
+        else
+            y=0;
+    }
+    else if(s_iguais(fun_type, "DReLU")){
+        if(x>0)
+            y=1;
+        else
+            y=0;
+    }
+    else if(s_iguais(fun_type, "tanh")){
+      y=tanh(x);
+    }
+    else if(s_iguais(fun_type, "Dtanh")){
+      y=1-(tanh(x)*tanh(x));
+    }
     else
       assert(1==0);
 
