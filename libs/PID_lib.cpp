@@ -5,16 +5,16 @@
  #include"PID_lib.hpp"
 
  //------------------CONSTRUTORES&DESTRUTORES-------------------//
-ControladorPID::ControladorPID(float tA, float min_uK, float max_uK){
+ControladorPID::ControladorPID(_ponto tA, _ponto min_uK, _ponto max_uK){
   Ta=tA;
   min_Uk=min_uK;
   max_Uk=max_uK;
 
-  int hl[]={5, 5};
+  int hl[]={10};
   RR=new RedeNeural(8, 4, hl, sizeof(hl)/sizeof(int), 1); //entradas, saidas, camadas ocultas, numero de camadas ocultas, leraning_rate
 }
 
-ControladorPID::ControladorPID(float kP, float kD, float kI, float n, float tA, float min_uK, float max_uK){
+ControladorPID::ControladorPID(_ponto kP, _ponto kD, _ponto kI, _ponto n, _ponto tA, _ponto min_uK, _ponto max_uK){
   Kp=kP;
   Kd=kD;
   Ki=kI;
@@ -23,7 +23,7 @@ ControladorPID::ControladorPID(float kP, float kD, float kI, float n, float tA, 
   min_Uk=min_uK;
   max_Uk=max_uK;
 
-  int hl[]={5, 5};
+  int hl[]={10};
   RR=new RedeNeural(8, 4, hl, sizeof(hl)/sizeof(int), 1); //entradas, saidas, camadas ocultas, leraning_rate
 }
 
@@ -52,12 +52,12 @@ void ControladorPID::imprimir_parametros(){
 }
 #else
 void ControladorPID::imprimir_parametros(){
-  Serial.println("Kp: "+String(Kp)+" | Kd: "+String(Kd)+" | Ki: "+String(Ki)+" | N: "+String(N)+" | Ta: "+String(Ta));
+  Serial.println("Kp: "+String((double)Kp)+" | Kd: "+String((double)Kd)+" | Ki: "+String((double)Ki)+" | N: "+String((double)N));
 }
 #endif
 
 
-float ControladorPID::Calcula_Acao_Controle(float referencia, float saida){
+_ponto ControladorPID::Calcula_Acao_Controle(_ponto referencia, _ponto saida){
   double a, b ,c, d, e;
 
   //Calcula erro
@@ -71,7 +71,7 @@ float ControladorPID::Calcula_Acao_Controle(float referencia, float saida){
   d=1+(N*Ta);
   e=-(2+(N*Ta));
 
-  Uk[0]=(float)((-e*Uk[1])-(1*Uk[2])+(a*Ek[0])+(b*Ek[1])+(c*Ek[2]))/d; //by mateus
+  Uk[0]=(_ponto)((-e*Uk[1])-(1*Uk[2])+(a*Ek[0])+(b*Ek[1])+(c*Ek[2]))/d; //by mateus
 
   //Limitador acao controle
   if(Uk[0]>max_Uk)
@@ -93,6 +93,9 @@ float ControladorPID::Calcula_Acao_Controle(float referencia, float saida){
   return Uk[0];
 }
 
+_ponto delMin[]={-15715.1460554694, -15715.1460554694, -15715.1460554694, -6710.69439640079, -6710.69439640079, -6710.69439640079, -10921.5111892899, -10921.5111892899, 0.0365023487919662, 0.104919273776293, -0.00367110977701243, 0.0446094380168964};
+_ponto delMax[]={10533.4451104309, 10533.4451104309, 10533.4451104309, 6523.83750223168, 6523.83750223168, 6523.83750223168, 10539.9450592968, 10539.9450592968, 0.582097138213959, 6.73268647214836, -0.000860348137624122, 0.193104326053881};
+
 void ControladorPID::Atualiza_Parametros(){
   Matriz m(8, 1);
 
@@ -105,10 +108,19 @@ void ControladorPID::Atualiza_Parametros(){
   m.matriz[6][0]=Ek[1];
   m.matriz[7][0]=Ek[2];
 
+  for(int i=0;i<m.linhas;i++)
+    m.matriz[i][0]=(m.matriz[i][0]-delMin[i])/(delMax[i]-delMin[i]);
+
   RR->FeedFoward(m);
 
-  Kp=RR->saidas[RR->numero_layers-2]->matriz[0][0];
-  Kd=RR->saidas[RR->numero_layers-2]->matriz[0][1];
-  Ki=RR->saidas[RR->numero_layers-2]->matriz[0][2];
-  N=RR->saidas[RR->numero_layers-2]->matriz[0][3];
+  for(int i=0;i<RR->saidas[RR->index_resposta]->linhas;i++){
+    RR->saidas[RR->index_resposta]->matriz[i][0]=delMin[i+8]+(RR->saidas[RR->index_resposta]->matriz[i][0]*(delMax[i+8]-delMin[i+8]));
+    if(RR->saidas[RR->index_resposta]->matriz[i][0]<0)
+      RR->saidas[RR->index_resposta]->matriz[i][0]=0;
+  }
+
+  Kp=RR->saidas[RR->index_resposta]->matriz[0][0];
+  Ki=RR->saidas[RR->index_resposta]->matriz[1][0];
+  Kd=RR->saidas[RR->index_resposta]->matriz[2][0];
+  N=1/RR->saidas[RR->index_resposta]->matriz[3][0];
 }

@@ -17,26 +17,26 @@ struct ControladorPID{
     //auto tuning
     RedeNeural* RR;
     //parametros controlador
-    float Kp=0;
-    float Kd=0;
-    float Ki=0;
-    float N=1;
-    float Ta=1;
-    float min_Uk=0;
-    float max_Uk=1;
+    _ponto Kp=0;
+    _ponto Kd=0;
+    _ponto Ki=0;
+    _ponto N=1;
+    _ponto Ta=1;
+    _ponto min_Uk=0;
+    _ponto max_Uk=1;
     //variaveis controlador
-    float Ek[3]={0, 0, 0}; //erro
-    float Uk[3]={0, 0, 0}; //acao de controle
-    float Yk[2]={0, 0}; //Saida
+    _ponto Ek[3]={0, 0, 0}; //erro
+    _ponto Uk[3]={0, 0, 0}; //acao de controle
+    _ponto Yk[2]={0, 0}; //Saida
 
     ControladorPID()=delete;
-    ControladorPID(float tA, float min_uK, float max_uK);
-    ControladorPID(float kP, float kD, float tI, float N, float tA, float min_uK, float max_uK);
+    ControladorPID(_ponto tA, _ponto min_uK, _ponto max_uK);
+    ControladorPID(_ponto kP, _ponto kD, _ponto tI, _ponto N, _ponto tA, _ponto min_uK, _ponto max_uK);
     ControladorPID(const ControladorPID &c);
     ~ControladorPID();
 
     void imprimir_parametros();
-    float Calcula_Acao_Controle(float referencia, float saida);
+    _ponto Calcula_Acao_Controle(_ponto referencia, _ponto saida);
     void Atualiza_Parametros();
 };
 

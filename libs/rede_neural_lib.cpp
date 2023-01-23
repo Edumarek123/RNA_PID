@@ -143,23 +143,42 @@ void RedeNeural::imprimir_rede() {
 }
 #endif
 
-void RedeNeural::carregar_rede(_ponto *v){
+void RedeNeural::carregar_rede(_ponto *p){
     long int cont=0;
 
     for (int i = 0; i < numero_layers - 1; i++)
         for (int j = 0; j < weights_layers[i]->linhas; j++)
             for (int k = 0; k < weights_layers[i]->colunas; k++){
-                weights_layers[i]->matriz[j][k]=v[cont];
+                weights_layers[i]->matriz[j][k]=p[cont];
                 cont++;
             }
 
     for (int i = 0; i < numero_layers - 1; i++)
         for (int j = 0; j < bias_layers[i]->linhas; j++)
             for (int k = 0; k < bias_layers[i]->colunas; k++){
-                bias_layers[i]->matriz[j][k]=v[cont];
+                bias_layers[i]->matriz[j][k]=p[cont];
                 cont++;
             }
 }
+
+#if defined __linux__
+void RedeNeural::salvar_rede(const char *s){
+    std::ofstream arquivo(s, std::ofstream::out);
+
+    if (arquivo.is_open()){
+        for (int i = 0; i < numero_layers - 1; i++)
+            for (int j = 0; j < weights_layers[i]->linhas; j++)
+                for (int k = 0; k < weights_layers[i]->colunas; k++)
+                    arquivo<<weights_layers[i]->matriz[j][k]<<", ";
+
+        for (int i = 0; i < numero_layers - 1; i++)
+            for (int j = 0; j < bias_layers[i]->linhas; j++)
+                for (int k = 0; k < bias_layers[i]->colunas; k++)
+                    arquivo<<bias_layers[i]->matriz[j][k]<<", ";
+    }
+    arquivo.close();
+}
+#endif
 
 int RedeNeural::memoria_alocada(){
     int bytes=0;
@@ -373,12 +392,12 @@ float RedeNeural::TreinarRede(const Matriz *entradas,const Matriz *saidasEsperad
 
     int cont=0;
     float accuracy=0;
-    float loss=1;
+    float _loss=1;
     for(int e=0;e<epochs;e++){
-        if((accuracy<1 && loss>0.001) || numeroDados<50){
+        if((accuracy<1 && _loss>0.001) || numeroDados<50){
         cont=0;
         accuracy=0;
-        loss=0;
+        _loss=0;
         while (cont<numeroDadosTreinamento) {
             FeedFoward(entradas[cont]);
             CalculaErros(saidasEsperadas[cont]);
@@ -387,32 +406,31 @@ float RedeNeural::TreinarRede(const Matriz *entradas,const Matriz *saidasEsperad
         }
 
         while (cont<numeroDadosTreinamento+numeroDadosTestesTreino) {
-            if(RealizarTeste(entradas[cont], saidasEsperadas[cont]))
-                accuracy++;
+        //     if(RealizarTeste(entradas[cont], saidasEsperadas[cont]))
+        //         accuracy++;
 
-            loss+=loss(saidasEsperadas[cont], saidas[index_resposta]);
-            cont++;
+        //     _loss+=loss(saidasEsperadas[cont], saidas[index_resposta]);
+        //     cont++;
         }
         accuracy/=numeroDadosTestesTreino;
-        loss/=numeroDadosTestesTreino;
-        Serial.println(String(e+1)+"/"+String(epochs)+" | accuracy: "+String(accuracy)+" | val_loss: "+String(loss));
+        _loss/=numeroDadosTestesTreino;
+        Serial.println(String(e+1)+"/"+String(epochs)+" | accuracy: "+String(accuracy)+" | val_loss: "+String(_loss));
         }
     }
     accuracy=0;
-    loss=0;
+    _loss=0;
     if(numeroDadosTestes>0){
         while(cont<numeroDadosTreinamento+numeroDadosTestesTreino+numeroDadosTestes) {
+            // if(RealizarTeste(entradas[cont], saidasEsperadas[cont]))
+            //     accuracy++;                
 
-            if(RealizarTeste(entradas[cont], saidasEsperadas[cont]))
-                accuracy++;                
+            // _loss+=loss(saidasEsperadas[cont], saidas[index_resposta]);
 
-            loss+=loss(saidasEsperadas[cont], saidas[index_resposta]);
-
-            cont++;
+            // cont++;
         }
         accuracy/=numeroDadosTestes;
-        loss/=numeroDadosTestes;
-        Serial.println("Accuracy testes: "+String(accuracy/numeroDadosTestes)+" | loss: "+String(loss));
+        _loss/=numeroDadosTestes;
+        Serial.println("Accuracy testes: "+String(accuracy/numeroDadosTestes)+" | loss: "+String(_loss));
     }
     return cont;
 }

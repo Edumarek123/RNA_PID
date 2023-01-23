@@ -38,6 +38,7 @@ struct RedeNeural{
 
     void imprimir_rede();
     void carregar_rede(_ponto *v);
+    void salvar_rede(const char *s);
     int memoria_alocada();
     void FeedFoward(Matriz entradas); 
     void CalculaErros(Matriz saidas_esperadas);
