@@ -166,6 +166,10 @@ void RedeNeural::salvar_rede(const char *s){
     std::ofstream arquivo(s, std::ofstream::out);
 
     if (arquivo.is_open()){
+        arquivo<<"#ifndef REDE_SALVA_HPP\n#define REDE_SALVA_HPP\n\n";
+        arquivo<<"#include <matriz_lib.hpp>\n\n";
+        arquivo<<"_ponto PESOS_REDE_SALVA[] = {";
+
         for (int i = 0; i < numero_layers - 1; i++)
             for (int j = 0; j < weights_layers[i]->linhas; j++)
                 for (int k = 0; k < weights_layers[i]->colunas; k++)
@@ -174,7 +178,13 @@ void RedeNeural::salvar_rede(const char *s){
         for (int i = 0; i < numero_layers - 1; i++)
             for (int j = 0; j < bias_layers[i]->linhas; j++)
                 for (int k = 0; k < bias_layers[i]->colunas; k++)
-                    arquivo<<bias_layers[i]->matriz[j][k]<<", ";
+                    if(i == numero_layers-2 && j == bias_layers[i]->linhas-1 && k == bias_layers[i]->colunas-1)
+                        arquivo<<bias_layers[i]->matriz[j][k];
+                    else
+                        arquivo<<bias_layers[i]->matriz[j][k]<<", ";
+
+        arquivo<<"};\n\n";
+        arquivo<<"#endif";
     }
     arquivo.close();
 }

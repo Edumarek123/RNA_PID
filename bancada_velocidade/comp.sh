@@ -3,7 +3,7 @@
 clear
 
 
-g++ -o model main.cpp /home/dudu/Arduino/libraries/RNA_PID/matriz_lib.cpp /home/dudu/Arduino/libraries/RNA_PID/rede_neural_lib.cpp /home/dudu/Arduino/libraries/RNA_PID/PID_lib.cpp
+g++ -o model main.cpp /home/dudu/Arduino/libraries/RNA_PID/matriz_lib.cpp /home/dudu/Arduino/libraries/RNA_PID/rede_neural_lib.cpp /home/dudu/Arduino/libraries/RNA_PID/PID_lib.cpp /home/dudu/Arduino/libraries/RNA_PID/referencia_lib.cpp
 
 ./model
 

@@ -17,12 +17,12 @@ typedef double _ponto;
 typedef _ponto (*funType)(_ponto);
 
 struct Matriz{
-    int linhas;
-    int colunas;
+    size_t linhas;
+    size_t colunas;
     _ponto **matriz;
 
     Matriz();
-    Matriz(int lin, int col); //alterar carrega_valores()
+    Matriz(size_t lin, size_t col); //alterar carrega_valores()
     Matriz(const Matriz &m);
     ~Matriz();
 
@@ -55,5 +55,6 @@ _ponto ReLU(_ponto x);
 _ponto DReLU(_ponto x);
 _ponto Tanh(_ponto x);
 _ponto DTanh(_ponto x);
-
+_ponto seno(_ponto x);
+    
 #endif //MATRIZ_LIB_HPP

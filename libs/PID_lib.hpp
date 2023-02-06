@@ -7,6 +7,7 @@
 
 #if __linux__
     #include<iostream>
+    #include <time.h>  
 #else
     #include<Arduino.h>
 #endif
@@ -28,6 +29,11 @@ struct ControladorPID{
     _ponto Ek[3]={0, 0, 0}; //erro
     _ponto Uk[3]={0, 0, 0}; //acao de controle
     _ponto Yk[2]={0, 0}; //Saida
+    //variaveis auxiliares
+    size_t iteracoesAcaoControle=0;
+    size_t limiteIteracoesAcaoControle=1;
+    bool calcularTempoExecucao=false;
+    unsigned long tExecucao=0; //ms
 
     ControladorPID()=delete;
     ControladorPID(_ponto tA, _ponto min_uK, _ponto max_uK);
@@ -35,7 +41,7 @@ struct ControladorPID{
     ControladorPID(const ControladorPID &c);
     ~ControladorPID();
 
-    void imprimir_parametros();
+    void Imprimir_Parametros();
     _ponto Calcula_Acao_Controle(_ponto referencia, _ponto saida);
     void Atualiza_Parametros();
 };
