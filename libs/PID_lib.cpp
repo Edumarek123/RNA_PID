@@ -6,39 +6,39 @@
 
  //------------------CONSTRUTORES&DESTRUTORES-------------------//
 ControladorPID::ControladorPID(_ponto tA, _ponto min_uK, _ponto max_uK){
-  Ta=tA;
-  min_Uk=min_uK;
-  max_Uk=max_uK;
+  Ta = tA;
+  min_Uk = min_uK;
+  max_Uk = max_uK;
 
-  int hl[]={10};
-  RR=new RedeNeural(8, 4, hl, sizeof(hl)/sizeof(int), 1); //entradas, saidas, camadas ocultas, numero de camadas ocultas, leraning_rate
+  int hl[] = {10};
+  RR = new RedeNeural(8, 4, hl, sizeof(hl) / sizeof(int), 1); //entradas, saidas, camadas ocultas, numero de camadas ocultas, leraning_rate
 }
 
 ControladorPID::ControladorPID(_ponto kP, _ponto kD, _ponto kI, _ponto n, _ponto tA, _ponto min_uK, _ponto max_uK){
-  Kp=kP;
-  Kd=kD;
-  Ki=kI;
-  Ta=tA;
-  N=n;
-  min_Uk=min_uK;
-  max_Uk=max_uK;
+  Kp = kP;
+  Kd = kD;
+  Ki = kI;
+  Ta = tA;
+  N = n;
+  min_Uk = min_uK;
+  max_Uk = max_uK;
 
-  int hl[]={10};
-  RR=new RedeNeural(8, 4, hl, sizeof(hl)/sizeof(int), 1); //entradas, saidas, camadas ocultas, leraning_rate
+  int hl[] = {10};
+  RR = new RedeNeural(8, 4, hl, sizeof(hl) / sizeof(int), 1); //entradas, saidas, camadas ocultas, leraning_rate
 }
 
 ControladorPID::ControladorPID(const ControladorPID &c){
-  Kp=c.Kp;
-  Kd=c.Kd;
-  Ki=c.Ki;
-  N=c.N;
-  Ta=c.Ta;
-  min_Uk=c.min_Uk;
-  max_Uk=c.max_Uk;
+  Kp = c.Kp;
+  Kd = c.Kd;
+  Ki = c.Ki;
+  N = c.N;
+  Ta = c.Ta;
+  min_Uk = c.min_Uk;
+  max_Uk = c.max_Uk;
 
-  limiteIteracoesAcaoControle=c.limiteIteracoesAcaoControle;
+  limiteIteracoesAcaoControle = c.limiteIteracoesAcaoControle;
 
-  RR=c.RR;
+  RR = c.RR;
 }
 
 ControladorPID::~ControladorPID(){
@@ -60,49 +60,49 @@ void ControladorPID::Imprimir_Parametros(){
 
 #if defined __linux__
 _ponto ControladorPID::Calcula_Acao_Controle(_ponto referencia, _ponto saida){
-  clock_t tInicio=clock();
+  clock_t tInicio = clock();
   double a, b ,c, d, e;
 
   //Calcula erro
-  Yk[0]=saida;
-  Ek[0]=referencia-saida;
+  Yk[0] = saida;
+  Ek[0]  = referencia - saida;
 
   //Calcula acao de controle
-  a=Kp*(1+(N*Ta))+(Ki*Ta)*(1+(N*Ta))+(Kd*N);
-  b=-(Kp*(2+(N*Ta))+(Ki*Ta)+(2*Kd*N));
-  c=Kp+(Kd*N);
-  d=1+(N*Ta);
-  e=-(2+(N*Ta));
+  a = Kp * (1 + (N * Ta)) + (Ki * Ta) * (1 + (N * Ta)) + (Kd * N);
+  b = -(Kp * (2 + (N * Ta)) + (Ki * Ta)+(2 * Kd * N));
+  c = Kp + (Kd * N);
+  d = 1 + (N * Ta);
+  e = -(2 + (N * Ta));
 
-  Uk[0]=(_ponto)((-e*Uk[1])-(1*Uk[2])+(a*Ek[0])+(b*Ek[1])+(c*Ek[2]))/d; //by mateus
+  Uk[0] = (_ponto)((-e * Uk[1]) - (1 * Uk[2]) + (a * Ek[0]) + (b * Ek[1]) + (c * Ek[2])) / d; //by mateus
 
   //Limitador acao controle
-  if(Uk[0]>max_Uk)
-    Uk[0]=max_Uk;
-  if(Uk[0]<=min_Uk)
-    Uk[0]=min_Uk;
+  if(Uk[0] > max_Uk)
+    Uk[0] = max_Uk;
+  if(Uk[0] <= min_Uk)
+    Uk[0] = min_Uk;
 
   //Atualiza Saidas
-  Yk[1]=Yk[0];
+  Yk[1] = Yk[0];
 
   //Atualiza erros
-  Ek[2]=Ek[1];
-  Ek[1]=Ek[0];
+  Ek[2] = Ek[1];
+  Ek[1] = Ek[0];
 
   //Atualiza acoes de controle
-  Uk[1]=Uk[0];
-  Uk[2]=Uk[1];
+  Uk[1] = Uk[0];
+  Uk[2] = Uk[1];
 
   //Atualizacao parametros
   iteracoesAcaoControle++;
-  if(iteracoesAcaoControle>=limiteIteracoesAcaoControle){
-    iteracoesAcaoControle=0;
+  if(iteracoesAcaoControle >= limiteIteracoesAcaoControle){
+    iteracoesAcaoControle = 0;
     Atualiza_Parametros();
     Imprimir_Parametros();
   }
 
   if(calcularTempoExecucao)
-    tExecucao=(unsigned long)((1000*(tInicio-clock()))/CLOCKS_PER_SEC);
+    tExecucao = (unsigned long)((1000 * (tInicio - clock())) / CLOCKS_PER_SEC);
 
   return Uk[0];
 }
@@ -112,53 +112,46 @@ _ponto ControladorPID::Calcula_Acao_Controle(_ponto referencia, _ponto saida){
   unsigned long tInicio=micros();
   _ponto a, b ,c, d, e;
 
-  //Atualizacao parametros
-  iteracoesAcaoControle++;
-  if(iteracoesAcaoControle>=limiteIteracoesAcaoControle){
-    iteracoesAcaoControle=0;
-    Atualiza_Parametros();
-  }
-
-  //Calcula erro
-  Yk[0]=saida;
-  Ek[0]=referencia-saida;
+    //Calcula erro
+  Yk[0] = saida;
+  Ek[0]  = referencia - saida;
 
   //Calcula acao de controle
-  a=Kp*(1+(N*Ta))+(Ki*Ta)*(1+(N*Ta))+(Kd*N);
-  b=-(Kp*(2+(N*Ta))+(Ki*Ta)+(2*Kd*N));
-  c=Kp+(Kd*N);
-  d=1+(N*Ta);
-  e=-(2+(N*Ta));
+  a = Kp * (1 + (N * Ta)) + (Ki * Ta) * (1 + (N * Ta)) + (Kd * N);
+  b = -(Kp * (2 + (N * Ta)) + (Ki * Ta)+(2 * Kd * N));
+  c = Kp + (Kd * N);
+  d = 1 + (N * Ta);
+  e = -(2 + (N * Ta));
 
-  Uk[0]=(_ponto)((-e*Uk[1])-(1*Uk[2])+(a*Ek[0])+(b*Ek[1])+(c*Ek[2]))/d; //by mateus
+  Uk[0] = (_ponto)((-e * Uk[1]) - (1 * Uk[2]) + (a * Ek[0]) + (b * Ek[1]) + (c * Ek[2])) / d; //by mateus
 
   //Limitador acao controle
-  if(Uk[0]>max_Uk)
-    Uk[0]=max_Uk;
-  if(Uk[0]<=min_Uk)
-    Uk[0]=min_Uk;
+  if(Uk[0] > max_Uk)
+    Uk[0] = max_Uk;
+  if(Uk[0] <= min_Uk)
+    Uk[0] = min_Uk;
 
   //Atualiza Saidas
-  Yk[1]=Yk[0];
+  Yk[1] = Yk[0];
 
   //Atualiza erros
-  Ek[2]=Ek[1];
-  Ek[1]=Ek[0];
+  Ek[2] = Ek[1];
+  Ek[1] = Ek[0];
 
   //Atualiza acoes de controle
-  Uk[1]=Uk[0];
-  Uk[2]=Uk[1];
+  Uk[1] = Uk[0];
+  Uk[2] = Uk[1];
 
   //Atualizacao parametros
   iteracoesAcaoControle++;
-  if(iteracoesAcaoControle>=limiteIteracoesAcaoControle){
-    iteracoesAcaoControle=0;
+  if(iteracoesAcaoControle >= limiteIteracoesAcaoControle){
+    iteracoesAcaoControle = 0;
     Atualiza_Parametros();
     Imprimir_Parametros();
   }
 
   if(calcularTempoExecucao)
-    tExecucao=(micros()-tInicio);
+    tExecucao = micros() - tInicio;
 
   return Uk[0];
 }
@@ -166,34 +159,34 @@ _ponto ControladorPID::Calcula_Acao_Controle(_ponto referencia, _ponto saida){
 
 void ControladorPID::Atualiza_Parametros(){
   //gambiarra provisoria
-  _ponto delMin[]={-15715.1460554694, -15715.1460554694, -15715.1460554694, -6710.69439640079, -6710.69439640079, -6710.69439640079, -10921.5111892899, -10921.5111892899, 0.0365023487919662, 0.104919273776293, -0.00367110977701243, 0.0446094380168964};
-  _ponto delMax[]={10533.4451104309, 10533.4451104309, 10533.4451104309, 6523.83750223168, 6523.83750223168, 6523.83750223168, 10539.9450592968, 10539.9450592968, 0.582097138213959, 6.73268647214836, -0.000860348137624122, 0.193104326053881};
+  _ponto delMin[] = {-15715.1460554694, -15715.1460554694, -15715.1460554694, -6710.69439640079, -6710.69439640079, -6710.69439640079, -10921.5111892899, -10921.5111892899, 0.0365023487919662, 0.104919273776293, -0.00367110977701243, 0.0446094380168964};
+  _ponto delMax[] = {10533.4451104309, 10533.4451104309, 10533.4451104309, 6523.83750223168, 6523.83750223168, 6523.83750223168, 10539.9450592968, 10539.9450592968, 0.582097138213959, 6.73268647214836, -0.000860348137624122, 0.193104326053881};
   //
 
   Matriz m(8, 1);
 
-  m.matriz[0][0]=Uk[0];
-  m.matriz[1][0]=Uk[1];
-  m.matriz[2][0]=Uk[2];
-  m.matriz[3][0]=Yk[0];
-  m.matriz[4][0]=Yk[1];
-  m.matriz[5][0]=Ek[0];
-  m.matriz[6][0]=Ek[1];
-  m.matriz[7][0]=Ek[2];
+  m.matriz[0][0] = Uk[0];
+  m.matriz[1][0] = Uk[1];
+  m.matriz[2][0] = Uk[2];
+  m.matriz[3][0] = Yk[0];
+  m.matriz[4][0] = Yk[1];
+  m.matriz[5][0] = Ek[0];
+  m.matriz[6][0] = Ek[1];
+  m.matriz[7][0] = Ek[2];
 
-  for(int i=0;i<m.linhas;i++)
-    m.matriz[i][0]=(m.matriz[i][0]-delMin[i])/(delMax[i]-delMin[i]);
+  for(int i = 0; i < m.linhas; i++)
+    m.matriz[i][0] = (m.matriz[i][0] - delMin[i]) / (delMax[i] - delMin[i]);
 
   RR->FeedFoward(m);
 
-  for(int i=0;i<RR->saidas[RR->index_resposta]->linhas;i++){
-    RR->saidas[RR->index_resposta]->matriz[i][0]=delMin[i+8]+(RR->saidas[RR->index_resposta]->matriz[i][0]*(delMax[i+8]-delMin[i+8]));
-    if(RR->saidas[RR->index_resposta]->matriz[i][0]<0)
-      RR->saidas[RR->index_resposta]->matriz[i][0]=0;
+  for(int i = 0;i < RR->saidas[RR->index_resposta]->linhas; i++){
+    RR->saidas[RR->index_resposta]->matriz[i][0] = delMin[i+8] + (RR->saidas[RR->index_resposta]->matriz[i][0] * (delMax[i+8] - delMin[i+8]));
+    if(RR->saidas[RR->index_resposta]->matriz[i][0] < 0)
+      RR->saidas[RR->index_resposta]->matriz[i][0] = 0;
   }
 
   Kp=RR->saidas[RR->index_resposta]->matriz[0][0];
   Ki=RR->saidas[RR->index_resposta]->matriz[1][0];
   Kd=RR->saidas[RR->index_resposta]->matriz[2][0];
-  N=1/RR->saidas[RR->index_resposta]->matriz[3][0];
+  N=1 / RR->saidas[RR->index_resposta]->matriz[3][0];
 }

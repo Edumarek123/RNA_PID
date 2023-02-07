@@ -20,10 +20,10 @@ const float TA = 0.08;
 
 //Parametros Sensor
 const float MIN_PWM = 0;
-const float MAX_PWM = pow(2, RESOLUCAO_PWM)-1;
+const float MAX_PWM = pow(2, RESOLUCAO_PWM) - 1;
 const int PULSOS_POR_VOLTA = 3;
 const float COEFICIENTE_VELOCIDADE = ((1 / TA) * 60) / PULSOS_POR_VOLTA;  //(Ta[ms] * coeficienteRPM) / PulsosPorVolta
-const int VELOCIDADE_MAX=9750;
+const int VELOCIDADE_MAX = 9750;
 
 //Variaveis Globais
 int PULSOS_ENCODER = 0;
@@ -31,14 +31,13 @@ int PULSOS_ENCODER = 0;
 //Controlador PID
 ControladorPID CC(KP, KD, KI, N, TA, MIN_PWM, MAX_PWM);
 
-//REFERENCIA
+//Referencia
 Referencia REFERENCIA(0, VELOCIDADE_MAX, onda_senoidal);
 
 void IRAM_ATTR interrupcao_encoder() {PULSOS_ENCODER++;}
 float captura_velocidade();
 void imprimi_informacoes(float velocidadeAtual, float sinalControle, float referencia, bool monitorSerial);
 void realiza_ensaio_FFT(int pwm);
-
 
 void setup() {
   //SERIAL
@@ -58,10 +57,10 @@ void setup() {
 
   //CONTROLADOR
   CC.RR->carregar_rede(PESOS_REDE_SALVA);
-  CC.calcularTempoExecucao=true;
+  CC.calcularTempoExecucao = true;
 
   //REFERENCIA
-  REFERENCIA.velocidade=0.05;
+  REFERENCIA.velocidade = 0.05;
 
   delay(1000);
 }

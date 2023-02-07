@@ -8,9 +8,9 @@
 #include <math.h>
 #include <assert.h>
 #if defined __linux__
-    #include<iostream>
+    #include <iostream>
 #else
-    #include<Arduino.h>
+    #include <Arduino.h>
 #endif
 
 typedef double _ponto;
