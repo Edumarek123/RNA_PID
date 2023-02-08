@@ -1,5 +1,5 @@
 #include <iostream>
-#include "/home/dudu/Arduino/libraries/RNA_PID/rede_neural_lib.hpp"
+#include "/home/dudu/Arduino/libraries/RNA_PID_LIB/rede_neural_lib.hpp"
 
 int main(){
     int hl[]={2};

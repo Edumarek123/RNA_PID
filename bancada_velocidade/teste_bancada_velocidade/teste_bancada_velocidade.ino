@@ -1,6 +1,7 @@
 #include <PID_lib.hpp>
 #include <referencia_lib.hpp>
 #include "rede_salva.hpp"
+//#include "delimitadores_salvos.hpp"
 
 //Pinos
 #define PIN_MOTOR 23
@@ -17,6 +18,7 @@ const float KD = 0;
 const float KI = 1.28;
 const float N = 1/0.0579;
 const float TA = 0.08;
+const int TA_S = TA * 1000;
 
 //Parametros Sensor
 const float MIN_PWM = 0;
@@ -32,12 +34,15 @@ int PULSOS_ENCODER = 0;
 ControladorPID CC(KP, KD, KI, N, TA, MIN_PWM, MAX_PWM);
 
 //Referencia
-Referencia REFERENCIA(0, VELOCIDADE_MAX, onda_senoidal);
+Referencia REFERENCIA(0, VELOCIDADE_MAX, onda_triangular);
 
+//Funcoes
 void IRAM_ATTR interrupcao_encoder() {PULSOS_ENCODER++;}
 float captura_velocidade();
 void imprimi_informacoes(float velocidadeAtual, float sinalControle, float referencia, bool monitorSerial);
 void realiza_ensaio_FFT(int pwm);
+void realiza_ensaio_matlab();
+
 
 void setup() {
   //SERIAL
@@ -58,6 +63,8 @@ void setup() {
   //CONTROLADOR
   CC.RR->carregar_rede(PESOS_REDE_SALVA);
   CC.calcularTempoExecucao = true;
+  CC.imprimirParametros = true;
+  CC.atualizarParametros = true;
 
   //REFERENCIA
   REFERENCIA.velocidade = 0.05;
@@ -66,20 +73,22 @@ void setup() {
 }
 
 void loop() {
-  float velocidadeAtual = captura_velocidade();
-  float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
-  ledcWrite(CANAL_PWM, sinalControle);
+  // float velocidadeAtual = captura_velocidade();
+  // float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
+  // ledcWrite(CANAL_PWM, sinalControle);
 
-  imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
+  // imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
 
-  REFERENCIA.atualiza_referencia();  
+  // REFERENCIA.atualiza_referencia();  
+
+  realiza_ensaio_matlab();
 }
 
 float captura_velocidade() {
   //reseta contador
   PULSOS_ENCODER = 0;
   interrupts();
-  delay(80);  //conta 100ms de pulsos (Ta)
+  delay(TA_S);  //conta 100ms de pulsos (Ta)
   noInterrupts();
   
   return (COEFICIENTE_VELOCIDADE * PULSOS_ENCODER);
@@ -121,3 +130,33 @@ void realiza_ensaio_FFT(int pwm) {
 
   ledcWrite(CANAL_PWM, MIN_PWM);
 }
+
+void realiza_ensaio_matlab(){
+  unsigned long tSimulacao = 15 * 1000;
+  unsigned long tInicio = millis();
+  unsigned long tAtual = 0;
+
+  REFERENCIA.entrada = onda_quadrada;
+  do{
+    float velocidadeAtual = captura_velocidade();
+    float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
+    ledcWrite(CANAL_PWM, sinalControle);
+
+    imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
+
+    REFERENCIA.atualiza_referencia();
+    
+    tAtual = millis() - tInicio;
+
+    REFERENCIA.entrada = onda_quadrada;
+    if(tAtual > tSimulacao / (3))
+      REFERENCIA.entrada = onda_senoidal;
+    if(tAtual > tSimulacao / (3 / 2))
+      REFERENCIA.entrada = onda_triangular;
+
+  }while(tAtual <= tSimulacao);
+
+  while(true);
+}
+
+

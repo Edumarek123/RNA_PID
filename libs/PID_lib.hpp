@@ -17,6 +17,11 @@
 struct ControladorPID{
     //auto tuning
     RedeNeural* RR;
+    bool normalizarDados = false;
+    _ponto *delimitadorMinX;
+    _ponto *delimitadorMaxX;
+    _ponto *delimitadorMinY;
+    _ponto *delimitadorMaxY;
     //parametros controlador
     _ponto Kp = 0;
     _ponto Kd = 0;
@@ -34,6 +39,8 @@ struct ControladorPID{
     size_t limiteIteracoesAcaoControle = 1;
     bool calcularTempoExecucao = false;
     unsigned long tExecucao = 0; //ms
+    bool imprimirParametros = false;
+    bool atualizarParametros = false;
 
     ControladorPID() = delete;
     ControladorPID(_ponto tA, _ponto min_uK, _ponto max_uK);
@@ -44,6 +51,8 @@ struct ControladorPID{
     void Imprimir_Parametros();
     _ponto Calcula_Acao_Controle(_ponto referencia, _ponto saida);
     void Atualiza_Parametros();
+    void CarregarDelimitadores(_ponto *p);
+    void NormalizarDados(Matriz *m, bool entradas);
 };
 
 #endif //PID_LIB_HPP

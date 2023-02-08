@@ -45,7 +45,7 @@ struct RedeNeural{
     void BackPropagation(Matriz entradas);  
     bool RealizarTeste(const Matriz *entradas,const Matriz *saidasEsperadas);
     void AlteraFuncaoAtivacao(const char* F, int L);
-    
+
     #if defined __linux__
     float TreinarRede(const std::string &entradas, const std::string &saidas_esperadas, const float quantidadePercentualTestes, const int epochs);
     #else

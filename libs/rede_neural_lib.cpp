@@ -27,7 +27,6 @@ RedeNeural::RedeNeural(int tam_Lx, int tam_Ly, int *tams_hl, int num_hl, _ponto 
     for(int i = 0; i < numero_layers - 1; i++)
         AlteraFuncaoAtivacao("sigmoide", i);
 
-
     bias_layers = (Matriz** )malloc((numero_layers - 1) * sizeof(Matriz*));
     for(int i = 0; i < numero_layers - 1; i++)
         bias_layers[i] = new Matriz(tam_layers[i + 1], 1);
@@ -500,5 +499,4 @@ Matriz* separa_dados(const std::string linha){
 
 	return coleta;
 }
-
 #endif

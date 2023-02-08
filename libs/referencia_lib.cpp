@@ -12,7 +12,7 @@ Referencia::Referencia(_ponto _moduloMin, _ponto _moduloMax, refType _entrada){
 }
 
 void Referencia::atualiza_referencia(){
-    if(entrada == degrau_unitario || entrada == onda_quadrada || entrada == onda_senoidal)
+    if(entrada == degrau_unitario || entrada == onda_quadrada || entrada == onda_senoidal || entrada == onda_triangular)
         modulo = entrada(moduloMax, angulo, velocidade);
     else
         modulo = entrada(modulo, angulo, velocidade);
@@ -46,9 +46,13 @@ _ponto onda_quadrada(_ponto m, _ponto a, _ponto v){
 }
 
 _ponto onda_triangular(_ponto m, _ponto a, _ponto v){
-    if(a < PpIi)
-        return m + (m/100);
-    return m - (m/100);
+    a = (a / (2 * PpIi));
+    
+    if(a < 0.5)
+        return 2 * a * m;
+
+    return m - (2 * (a - 0.5) * m);
+
 }
 
 _ponto onda_senoidal(_ponto m, _ponto a, _ponto v){
