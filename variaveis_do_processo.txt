@@ -1,0 +1,24 @@
+Variáveis do processo
+
+//Script Matlab
+ -Coeficiente de dispersão
+ -Número de funções geradas
+
+//Simulação Simulink
+ -Tipo de entrada
+ -Parâmetros das entradas
+ -Combinações de entradas
+ -Tempo de simulação
+
+//Rede Neural
+ -Numero de entradas
+ -Numero de saidas
+ -Topografia camadas ocultas
+ -Funções de ativação
+ -Treinamento: epocas, coeficiente de aprendizado, funções das métricas
+ -Método de normalização dos dados
+
+//Controlador
+ -Função de transferência (tipo)
+ -Variáveis observadas: erro, ação de controle, saída
+ -Método de sintonização
