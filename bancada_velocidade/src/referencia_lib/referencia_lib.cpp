@@ -32,7 +32,7 @@ void Referencia::atualiza_referencia(){
 }
 
 _ponto degrau_unitario(_ponto m, _ponto a, _ponto v){
-    return m;
+    return m*v;
 }
 
 _ponto rampa(_ponto m,_ponto a, _ponto v){

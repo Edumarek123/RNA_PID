@@ -28,7 +28,7 @@ const float COEFICIENTE_VELOCIDADE = ((1 / TA) * 60) / PULSOS_POR_VOLTA;  //(Ta[
 const int VELOCIDADE_MAX = 9750;
 
 //Variaveis Globais
-int PULSOS_ENCODER = 0;
+unsigned long PULSOS_ENCODER = 0;
 
 //Controlador PID
 ControladorPID CC(KP, KD, KI, N, TA, MIN_PWM, MAX_PWM);
@@ -41,8 +41,6 @@ void IRAM_ATTR interrupcao_encoder() {PULSOS_ENCODER++;}
 float captura_velocidade();
 void imprimi_informacoes(float velocidadeAtual, float sinalControle, float referencia, bool monitorSerial);
 void roda_continuo();
-void realiza_ensaio_FFT(int pwm);
-void realiza_ensaio_matlab();
 void realiza_ensaio_dinamico(unsigned long tSimulacao, refType funcaoEntrada, _ponto velocidade, _ponto anguloInicial);
 
 
@@ -60,7 +58,6 @@ void setup() {
 
   // //INTERRUPCAO
   attachInterrupt(digitalPinToInterrupt(PIN_ENCODER), interrupcao_encoder, FALLING);
-  noInterrupts();
 
   //CONTROLADOR
   CC.RR->carregar_rede(PESOS_REDE_SALVA);
@@ -73,16 +70,13 @@ void setup() {
   REFERENCIA.velocidade = 0.05;
   
   //ENSAIOS
-  //realiza_ensaio_FFT(MAX_PWM);
-
-  //realiza_ensaio_matlab();
-  // realiza_ensaio_dinamico(15, degrau_unitario, 0.05, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
+  // realiza_ensaio_dinamico(15, degrau_unitario, 1, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   // realiza_ensaio_dinamico(15, rampa, 200, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   // realiza_ensaio_dinamico(15, onda_quadrada, 0.15, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
-  // realiza_ensaio_dinamico(15, onda_triangular, 0.08, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
-  realiza_ensaio_dinamico(15, onda_senoidal, 0.05, PpIi+(PpIi/2)); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
+  realiza_ensaio_dinamico(5, onda_triangular, 0.08, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
+  // realiza_ensaio_dinamico(15, onda_senoidal, 0.05, PpIi+(PpIi/2)); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   
-  delay(1000);
+  // delay(1000);
 }
 
 void loop() {
@@ -90,114 +84,57 @@ void loop() {
 }
 
 float captura_velocidade() {
-    //reseta contador
-    PULSOS_ENCODER = 0;
-    interrupts();
-    delay(TA_S);  //conta 100ms de pulsos (Ta)
-    noInterrupts();
+  //reseta contador
+  PULSOS_ENCODER = 0;
+  delay(TA_S);  //conta TA_S de pulsos
 
-    return (COEFICIENTE_VELOCIDADE * PULSOS_ENCODER);
+  return (COEFICIENTE_VELOCIDADE * PULSOS_ENCODER);
 }
 
 void imprimi_informacoes(float velocidadeAtual, float sinalControle, float referencia, bool monitorSerial) {
-    if (monitorSerial)
-        Serial.println("Referencia: " + String(referencia) + " RPM | Atual: " + String(velocidadeAtual) + " RPM | Erro: " + String(referencia - velocidadeAtual) + " RPM | Sinal de controle: " + String(sinalControle) + "bit");
-    else {
-        Serial.print("Max ");
-        Serial.print(VELOCIDADE_MAX);
-        Serial.print(" Min ");
-        Serial.print(0);
-        Serial.print(" Referenncia ");
-        Serial.print(referencia);
-        Serial.print(" Atual ");
-        Serial.println(velocidadeAtual);
+  if (monitorSerial)
+      Serial.println("Referencia: " + String(referencia) + " RPM | Atual: " + String(velocidadeAtual) + " RPM | Erro: " + String(referencia - velocidadeAtual) + " RPM | Sinal de controle: " + String(sinalControle) + "bit");
+  else {
+      Serial.print("Max ");
+      Serial.print(VELOCIDADE_MAX);
+      Serial.print(" Min ");
+      Serial.print(0);
+      Serial.print(" Referenncia ");
+      Serial.print(referencia);
+      Serial.print(" Atual ");
+      Serial.println(velocidadeAtual);
     }
 }
 
 void roda_continuo(){
-    float velocidadeAtual = captura_velocidade();
-    float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
-    ledcWrite(CANAL_PWM, sinalControle);
+  float velocidadeAtual = captura_velocidade();
+  float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
+  ledcWrite(CANAL_PWM, sinalControle);
 
-    imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
+  imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
 
-    REFERENCIA.atualiza_referencia();
-}
-
-void realiza_ensaio_FFT(int pwm) {
-    float velocidadeAtual = 0;
-    float velocidadePassada = 0;
-    int cont = 0;
-
-    Serial.println(velocidadeAtual);
-    ledcWrite(CANAL_PWM, pwm);
-    do {
-        velocidadePassada = velocidadeAtual;
-        velocidadeAtual = captura_velocidade();
-
-        Serial.println(velocidadeAtual);
-
-        if (velocidadeAtual == velocidadePassada)
-            cont++;
-        else
-            cont = 0;
-    } while (cont < 6);
-
-    ledcWrite(CANAL_PWM, MIN_PWM);
-}
-
-void realiza_ensaio_matlab(){
-    unsigned long tSimulacao = 15 * 1000;
-    unsigned long tInicio = millis();
-    unsigned long tAtual = 0;
-
-    REFERENCIA.entrada = onda_quadrada;
-    do{
-        float velocidadeAtual = captura_velocidade();
-        float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
-        ledcWrite(CANAL_PWM, sinalControle);
-
-        imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
-
-        REFERENCIA.atualiza_referencia();
-
-        tAtual = millis() - tInicio;
-
-        REFERENCIA.entrada = onda_quadrada;
-        if(tAtual > tSimulacao / (3))
-            REFERENCIA.entrada = onda_senoidal;
-        if(tAtual > tSimulacao / (3 / 2))
-            REFERENCIA.entrada = onda_triangular;
-
-    }while(tAtual <= tSimulacao);
-
-    while(true);
+  REFERENCIA.atualiza_referencia();
 }
 
 void realiza_ensaio_dinamico(unsigned long tSimulacao, refType funcaoEntrada, _ponto velocidade, _ponto anguloInicial){
-    tSimulacao *= 1000;
+  tSimulacao *= 1000;
 
-    REFERENCIA.entrada = funcaoEntrada;
-    REFERENCIA.angulo = anguloInicial;
-    REFERENCIA.velocidade = velocidade;
+  REFERENCIA.entrada = funcaoEntrada;
+  REFERENCIA.angulo = anguloInicial;
+  REFERENCIA.velocidade = velocidade;
 
-    unsigned long tInicio = millis();
-    unsigned long tAtual = 0;
-    do{
-        float velocidadeAtual = captura_velocidade();
-        float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
-        ledcWrite(CANAL_PWM, sinalControle);
+  unsigned long tInicio = millis();
+  unsigned long tAtual = 0;
+  do{
+      float velocidadeAtual = captura_velocidade();
+      float sinalControle = CC.Calcula_Acao_Controle(REFERENCIA.modulo, velocidadeAtual);
+      ledcWrite(CANAL_PWM, sinalControle);
 
-        imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
+      imprimi_informacoes(velocidadeAtual, sinalControle, REFERENCIA.modulo, false);
 
-        REFERENCIA.atualiza_referencia();
+      REFERENCIA.atualiza_referencia();
 
-        tAtual = millis() - tInicio;
-    }while(tAtual <= tSimulacao);
-    
+      tAtual = millis() - tInicio;
+  }while(tAtual <= tSimulacao);
   ledcWrite(CANAL_PWM, MIN_PWM);
-
-  for(int i = 0; i < 20; i++)
-    Serial.println("ok");
 }
-
