@@ -44,12 +44,9 @@ ControladorPID::ControladorPID(const ControladorPID &c){
 ControladorPID::~ControladorPID(){
     delete RR;
 
-    if(normalizarDados){
-        free(delimitadorMinX);
-        free(delimitadorMaxX);
-        free(delimitadorMinY);
-        free(delimitadorMaxY);
-    }
+    free(delimitadorMaxX);
+    free(delimitadorMinY);
+    free(delimitadorMaxY);
 }
 
 //---------------------------METODOS---------------------------//
@@ -66,8 +63,6 @@ void ControladorPID::Imprimir_Parametros(){
 #endif
 
 void ControladorPID::CarregarDelimitadores(_ponto *p){
-    normalizarDados = true;
-
     delimitadorMinX = (_ponto* )malloc(RR->tam_layer_x * sizeof(_ponto));
     delimitadorMaxX = (_ponto* )malloc(RR->tam_layer_x * sizeof(_ponto));
 
@@ -80,13 +75,13 @@ void ControladorPID::CarregarDelimitadores(_ponto *p){
         k ++;
     }
 
-    for(int i = 0; i < RR->tam_layer_x; i++){
-        delimitadorMaxX[i] = p[k];
+    for(int i = 0; i < RR->tam_layer_y; i++){
+        delimitadorMinY[i] = p[k];
         k ++;
     }
 
-    for(int i = 0; i < RR->tam_layer_y; i++){
-        delimitadorMinY[i] = p[k];
+    for(int i = 0; i < RR->tam_layer_x; i++){
+        delimitadorMaxX[i] = p[k];
         k ++;
     }
 
@@ -214,23 +209,16 @@ void ControladorPID::Atualiza_Parametros(){
     RR->FeedFoward(m);
 
     for(int i = 0;i < RR->saidas[RR->index_resposta]->linhas; i++){
-        RR->saidas[RR->index_resposta]->matriz[i][0] = delimitadorMinY[i+8] + (RR->saidas[RR->index_resposta]->matriz[i][0] * (delimitadorMaxY[i+8] - delimitadorMinY[i+8]));
+        RR->saidas[RR->index_resposta]->matriz[i][0] = delimitadorMinY[i] + (RR->saidas[RR->index_resposta]->matriz[i][0] * (delimitadorMaxY[i] - delimitadorMinY[i]));
         if(RR->saidas[RR->index_resposta]->matriz[i][0] < 0)
             RR->saidas[RR->index_resposta]->matriz[i][0] = 0;
     }
 
-    Kp=RR->saidas[RR->index_resposta]->matriz[0][0];
-    Ki=RR->saidas[RR->index_resposta]->matriz[1][0];
-    Kd=RR->saidas[RR->index_resposta]->matriz[2][0];
-    N=1 / RR->saidas[RR->index_resposta]->matriz[3][0];
+    Kp = RR->saidas[RR->index_resposta]->matriz[0][0];
+    Ki = RR->saidas[RR->index_resposta]->matriz[1][0];
+    Kd = RR->saidas[RR->index_resposta]->matriz[2][0];
+    N = 1 / RR->saidas[RR->index_resposta]->matriz[3][0];
 }
 
 
-void ControladorPID::NormalizarDados(Matriz *m, bool entradas){
-    if(entradas)
-        for(int i = 0; i < RR->tam_layer_x; i++)
-            m->matriz[i][0] = (m->matriz[i][0] - delimitadorMinX[i]) / (delimitadorMaxX[i] - delimitadorMinX[i]);
-    else
-        for(int i = 0; i < RR->tam_layer_y; i++)
-            m->matriz[i][0] = (m->matriz[i][0] - delimitadorMinY[i]) / (delimitadorMaxY[i] - delimitadorMinY[i]);
-}
+

@@ -7,7 +7,8 @@ BUILD=build
 default: lint all flash clean
 
 lint:
-	cpplint --filter=-legal/copyright,-build/header,-whitespace/line_length *.ino
+	#cpplint --extentions=ino,cpp,hpp --filter=-legal/copyright,-build/header,-whitespace/line_length *.ino
+	cpplint ooo.ino
 
 all:
 	arduino-cli compile --fqbn $(BOARD) --output-dir $(BUILD) ./

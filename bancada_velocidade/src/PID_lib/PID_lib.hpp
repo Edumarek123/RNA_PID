@@ -17,7 +17,6 @@
 struct ControladorPID{
     //auto tuning
     RedeNeural* RR;
-    bool normalizarDados = false;
     _ponto *delimitadorMinX;
     _ponto *delimitadorMaxX;
     _ponto *delimitadorMinY;
@@ -52,7 +51,6 @@ struct ControladorPID{
     _ponto Calcula_Acao_Controle(_ponto referencia, _ponto saida);
     void Atualiza_Parametros();
     void CarregarDelimitadores(_ponto *p);
-    void NormalizarDados(Matriz *m, bool entradas);
 };
 
 #endif //PID_LIB_HPP
