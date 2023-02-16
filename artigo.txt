@@ -1,0 +1,11 @@
+S1:
+    -Adicionar revisão controle adaptativo
+    -Adicionar revisão RNN
+
+S2:
+    -Solução proposta
+
+S3:
+    -Estudo de caso
+    -Comparação com cenários distintos
+

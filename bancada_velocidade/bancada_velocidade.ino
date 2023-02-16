@@ -64,7 +64,7 @@ void setup() {
   CC.CarregarDelimitadores(DELIMITADORES_SALVOS);
   // CC.calcularTempoExecucao = true;
   CC.imprimirParametros = true;
-  CC.atualizarParametros = true;
+  // CC.atualizarParametros = true;
 
   //REFERENCIA
   REFERENCIA.velocidade = 0.05;
@@ -72,8 +72,8 @@ void setup() {
   //ENSAIOS
   // realiza_ensaio_dinamico(15, degrau_unitario, 1, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   // realiza_ensaio_dinamico(15, rampa, 200, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
-  // realiza_ensaio_dinamico(15, onda_quadrada, 0.15, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
-  realiza_ensaio_dinamico(5, onda_triangular, 0.08, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
+  realiza_ensaio_dinamico(15, onda_quadrada, 0.15, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
+  // realiza_ensaio_dinamico(15, onda_triangular, 0.08, 0); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   // realiza_ensaio_dinamico(15, onda_senoidal, 0.05, PpIi+(PpIi/2)); //tempo de simulacao, funcao entrada, velocidade referencia, angulo inicial referencia
   
   // delay(1000);

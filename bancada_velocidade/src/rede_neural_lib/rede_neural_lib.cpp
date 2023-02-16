@@ -166,7 +166,7 @@ void RedeNeural::salvar_rede(const char *s){
 
     if (arquivo.is_open()){
     	arquivo<<"#ifndef REDE_SALVA_HPP\n#define REDE_SALVA_HPP\n\n";
-        arquivo<<"#include <matriz_lib.hpp>\n\n";
+        arquivo<<"#include "src/matriz_lib/matriz_lib.hpp"\n\n";
         arquivo<<"_ponto PESOS_REDE_SALVA[] = {";
 
         for (int i = 0; i < numero_layers - 1; i++)
