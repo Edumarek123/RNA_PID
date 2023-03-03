@@ -1,5 +1,5 @@
 #include <iostream>
-#include "rede_neural_lib/rede_neural_lib.hpp"
+#include "src/rede_neural_lib/rede_neural_lib.hpp"
 
 int main(){
     int hl[]={10};
@@ -8,7 +8,11 @@ int main(){
 
     RR->TreinarRede("../data/entradas.txt", "../data/saidasEsperadas.txt", 10, 500);
 
-    RR->salvar_rede("../data/rede_salva.hpp");
+    //RR->salvar_rede("../data/rede_salva.hpp");
+
+    RR->salvar_rede("rede_salva22.hpp");
+
+    std::cout<<"Finalizado!"<<std::endl;
 
     delete(RR);
 

@@ -304,3 +304,8 @@ _ponto seno(_ponto x){
     return sin(x);
 }
 //----------------------FUNCOES AUXILIARES---------------------//
+
+
+
+
+
