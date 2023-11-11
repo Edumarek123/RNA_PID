@@ -284,7 +284,7 @@ void RedeNeural::BackPropagation(Matriz entradas)
 }
 
 #if defined __linux__
-float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &PsaidasEsperadas, const float quantidadePercentualTestes, const int epochs)
+float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &PsaidasEsperadas, const float quantidadePercentualTestes, const int epochs, const _ponto coeficienteErro)
 {
     std::ifstream entradas;
     std::ifstream saidasEsperadas;
@@ -294,7 +294,10 @@ float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &P
     int numeroDadosTestes = (int)((numeroDados * quantidadePercentualTestes) / 100);        // x% para testes ao final
     int numeroDadosTestesTreino = (int)(numeroDados * 0.05);                                // 5% para testes durante treinamento
     int numeroDadosTreinamento = numeroDados - numeroDadosTestes - numeroDadosTestesTreino; // o restante para treinamento
-    _ponto limiteLoss = 0.008;
+
+    bool printarResultados = false;
+    _ponto entradaMax = encontra_entrada_max(PsaidasEsperadas);
+    _ponto limiteLoss = pow(entradaMax * coeficienteErro, 2);
 
     int cont = 0;
     float accuracy = 0;
@@ -303,7 +306,8 @@ float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &P
     std::string Sentradas, SsaidasEsperadas;
     if (entradas.is_open() && saidasEsperadas.is_open())
     {
-        for (int e = 0; e < epochs; e++)
+        int e = 0;
+        while (e < epochs || accuracy < 0.2)
         {
             if (accuracy < 1)
             {
@@ -356,12 +360,15 @@ float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &P
                             accuracy++;
                         _val_loss += aux_loss;
 
-                        // std::cout<<"---saidasEsperadas---"<<std::endl;
-                        // MsaidasEsperadas->imprimir();
-                        // std::cout<<"---saidas---"<<std::endl;
-                        // saidas[index_resposta]->imprimir();
-                        // std::cout<<std::endl;
-                        // std::cout<<std::endl;
+                        if (printarResultados)
+                        {
+                            std::cout << "---saidasEsperadas---" << std::endl;
+                            MsaidasEsperadas->imprimir();
+                            std::cout << "---saidas---" << std::endl;
+                            saidas[index_resposta]->imprimir();
+                            std::cout << std::endl;
+                            std::cout << std::endl;
+                        }
 
                         delete Mentradas;
                         delete MsaidasEsperadas;
@@ -371,6 +378,7 @@ float RedeNeural::TreinarRede(const std::string &Pentradas, const std::string &P
                 _val_loss /= numeroDadosTestesTreino;
                 std::cout << e + 1 << "/" << epochs << " | accuracy: " << accuracy << " | loss: " << _loss << " | val_loss: " << _val_loss << std::endl;
             }
+            e++;
         }
         accuracy = 0;
         _val_loss = 0;
@@ -496,8 +504,9 @@ bool RedeNeural::RealizarTeste(const Matriz *entradas, const Matriz *saidasEsper
     FeedFoward(*entradas);
 
     // saidas[index_resposta]->binary();
+    double l = 0.01;
 
-    if (loss(saidasEsperadas, saidas[index_resposta]) < 0.008)
+    if (loss(saidasEsperadas, saidas[index_resposta]) < l)
         return true;
     return false;
 }
@@ -557,5 +566,30 @@ Matriz *separa_dados(const std::string linha)
     free(dados);
 
     return coleta;
+}
+
+_ponto encontra_entrada_max(const std::string caminho)
+{
+    _ponto max = -1;
+    std::fstream arquivo;
+    std::string linha;
+    std::string valor;
+
+    arquivo.open(caminho);
+
+    do
+    {
+        getline(arquivo, linha);
+        std::istringstream iss(linha);
+        while (std::getline(iss, valor, ' '))
+        {
+            _ponto novoValor = std::stof(valor);
+            if (novoValor > max)
+                max = novoValor;
+        }
+
+    } while (arquivo);
+
+    return max;
 }
 #endif

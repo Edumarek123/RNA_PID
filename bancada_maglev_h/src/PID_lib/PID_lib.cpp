@@ -190,5 +190,4 @@ void ControladorPID::Atualiza_Parametros()
     Ki = RR->saidas[RR->index_resposta]->matriz[1][0];
     Kd = RR->saidas[RR->index_resposta]->matriz[2][0];
     N = 1 / RR->saidas[RR->index_resposta]->matriz[3][0];
-    
 }

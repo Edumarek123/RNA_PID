@@ -47,7 +47,7 @@ struct RedeNeural{
     void AlteraFuncaoAtivacao(const char* F, int L);
 
     #if defined __linux__
-    float TreinarRede(const std::string &entradas, const std::string &saidas_esperadas, const float quantidadePercentualTestes, const int epochs);
+    float TreinarRede(const std::string &Pentradas, const std::string &PsaidasEsperadas, const float quantidadePercentualTestes, const int epochs, const _ponto coeficienteErro);
     #else
     float TreinarRede(const Matriz *entradas,const Matriz *saidasEsperadas, const int numeroDados, const float quantidadePercentualTestes, const int epochs);
     #endif
@@ -55,7 +55,10 @@ struct RedeNeural{
 
 bool s_iguais(const char *A, const char *B);
 int memoria_alocada(const RedeNeural *NN);
-Matriz* separa_dados(const std::string linha);
+#if defined __linux__
+Matriz *separa_dados(const std::string linha);
 int contagem_dados(const std::string caminho);
+_ponto encontra_entrada_max(const std::string caminho);
+#endif
 
 #endif //REDE_NEURAL_LIB_HPP
