@@ -1,58 +1,81 @@
 <div align="center">
 
-# RNA-PID — Neural Network & Process Control Study
+# RNA-PID — Neural Networks & Process Control
 
-**An experimental study combining neural-network modeling, simulation, and PID control.**
+**An experimental study connecting process modeling, neural networks, and classical control.**
 
 ![Domain](https://img.shields.io/badge/domain-control%20engineering-0A7F8C)
 ![Methods](https://img.shields.io/badge/methods-neural%20networks%20%7C%20PID-6f42c1)
-![Status](https://img.shields.io/badge/status-research%20project-orange)
+![Status](https://img.shields.io/badge/status-research%20notes-orange)
 
 </div>
 
+## Contents
+
+- [Overview](#overview)
+- [Study workflow](#study-workflow)
+- [Modeling topics](#modeling-topics)
+- [Repository map](#repository-map)
+- [Getting started](#getting-started)
+- [Current scope](#current-scope)
+- [Reproducibility checklist](#reproducibility-checklist)
+- [License](#license)
+
 ## Overview
 
-RNA-PID explores a control-engineering workflow that brings together process modeling, simulation, neural-network configuration, and controller tuning.
+RNA-PID is a control-engineering study exploring how neural-network models can be used alongside process simulation and PID-controller design. The repository contains experiment notes, process variables, and supporting materials for a magnetic-levitation bench.
 
-The repository includes project notes and a folder dedicated to a magnetic-levitation bench. Its documentation describes the variables and experiment parameters considered during the study.
+It is best understood as a research workspace and documentation of a study — not as a packaged, validated controller.
 
 ## Study workflow
 
-The documented workflow is organized around four areas:
+```mermaid
+flowchart TD
+    A[Define process variables] --> B[Build process model]
+    B --> C[Configure simulation]
+    C --> D[Choose neural-network topology]
+    D --> E[Train and normalize data]
+    E --> F[Analyze process response]
+    F --> G[Study PID/controller tuning]
+```
 
-1. **Process definition** — define process variables and dispersion-related parameters.
-2. **Simulation** — configure input types, input parameters, combinations, and simulation time.
-3. **Neural network** — define input/output dimensions, hidden-layer topology, activation functions, training parameters, metrics, and normalization.
-4. **Controller** — select a transfer-function form, observed variables, and a tuning method.
+## Modeling topics
 
-## Repository contents
+The project notes cover:
+
+- Process variables and model parameters
+- MATLAB scripting and Simulink simulation
+- Neural-network inputs, outputs, hidden layers, activation functions, and normalization
+- Training parameters and evaluation metrics
+- Transfer functions and controller tuning
+- Error, control signal, and system output
+
+## Repository map
 
 ```text
-.
+RNA_PID/
 ├── bancada_maglev_h/          # Magnetic-levitation bench materials
-├── matTrab/                   # Supporting study materials
-├── variaveis_do_processo.txt  # Process, model, and controller notes
+├── matTrab/                   # Supporting study material
+├── variaveis_do_processo.txt  # Process and model notes
 └── README.md
 ```
 
-## Tools and concepts
-
-The notes refer to MATLAB scripting and Simulink simulation, neural-network modeling, and classical controller design. Specific software versions and installation procedures are not currently documented.
-
 ## Getting started
 
-Start by reviewing `variaveis_do_processo.txt` to understand the process variables and configuration choices. Then inspect the contents of `bancada_maglev_h/` and `matTrab/` to identify the relevant experiment files.
+1. Read [variaveis_do_processo.txt](variaveis_do_processo.txt) to understand the documented variables and parameters.
+2. Inspect [bancada_maglev_h/](bancada_maglev_h/) and [matTrab/](matTrab/) to identify the experiment files.
+3. Open the relevant MATLAB/Simulink files in a compatible environment, if present.
 
-The repository does not currently provide a verified, one-command setup procedure.
+The repository does not currently provide a verified dependency list, software-version matrix, or one-command reproduction procedure.
 
-## Scope and limitations
+## Current scope
 
-This README describes the documented study workflow. It does not claim that a trained network, tuned controller, or complete reproducible experiment is packaged and validated.
+The available material documents a study workflow and experimental context. It does not establish that a trained network, tuned PID controller, or complete magnetic-levitation experiment can be reproduced directly from a clean checkout.
 
-## Project status
+## Reproducibility checklist
 
-Research / experimental project.
+For a reproducible engineering report, record the plant model, sampling period, sensor and actuator characteristics, network topology, training data, normalization, controller gains, and test conditions.
 
 ## License
 
-No license file was identified in the repository. Contact the author before redistributing or reusing these materials.
+No `LICENSE` file is currently included. Unless a license is added, reuse and redistribution permissions are not granted by this repository.
