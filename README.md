@@ -1,30 +1,58 @@
-# RNA-PID — Neural Network and PID Control Study
+<div align="center">
 
-An experimental control-systems project exploring the use of neural networks alongside PID-controller design and simulation.
+# RNA-PID — Neural Network & Process Control Study
+
+**An experimental study combining neural-network modeling, simulation, and PID control.**
+
+![Domain](https://img.shields.io/badge/domain-control%20engineering-0A7F8C)
+![Methods](https://img.shields.io/badge/methods-neural%20networks%20%7C%20PID-6f42c1)
+![Status](https://img.shields.io/badge/status-research%20project-orange)
+
+</div>
 
 ## Overview
 
-The repository documents a workflow involving process simulation, neural-network configuration, and controller tuning. The project notes identify a magnetic-levitation bench as one of the experimental contexts.
+RNA-PID explores a control-engineering workflow that brings together process modeling, simulation, neural-network configuration, and controller tuning.
 
-## Study areas
+The repository includes project notes and a folder dedicated to a magnetic-levitation bench. Its documentation describes the variables and experiment parameters considered during the study.
 
-- Process-variable definition
-- MATLAB scripting and Simulink simulation
-- Neural-network topology, training, and normalization
-- Controller transfer functions
-- Observed variables such as error, control action, and system output
-- Controller tuning methods
+## Study workflow
+
+The documented workflow is organized around four areas:
+
+1. **Process definition** — define process variables and dispersion-related parameters.
+2. **Simulation** — configure input types, input parameters, combinations, and simulation time.
+3. **Neural network** — define input/output dimensions, hidden-layer topology, activation functions, training parameters, metrics, and normalization.
+4. **Controller** — select a transfer-function form, observed variables, and a tuning method.
 
 ## Repository contents
 
-- `bancada_maglev_h/` — magnetic-levitation bench materials
-- `matTrab/` — supporting project materials
-- `variaveis_do_processo.txt` — process and model configuration notes
+```text
+.
+├── bancada_maglev_h/          # Magnetic-levitation bench materials
+├── matTrab/                   # Supporting study materials
+├── variaveis_do_processo.txt  # Process, model, and controller notes
+└── README.md
+```
 
-## Purpose
+## Tools and concepts
 
-To investigate how data-driven models and classical control methods can be applied in an experimental control workflow.
+The notes refer to MATLAB scripting and Simulink simulation, neural-network modeling, and classical controller design. Specific software versions and installation procedures are not currently documented.
 
-## Status
+## Getting started
 
-Research / experimental project. The repository's notes describe study parameters; they should not be interpreted as a complete validated controller or reproducible benchmark.
+Start by reviewing `variaveis_do_processo.txt` to understand the process variables and configuration choices. Then inspect the contents of `bancada_maglev_h/` and `matTrab/` to identify the relevant experiment files.
+
+The repository does not currently provide a verified, one-command setup procedure.
+
+## Scope and limitations
+
+This README describes the documented study workflow. It does not claim that a trained network, tuned controller, or complete reproducible experiment is packaged and validated.
+
+## Project status
+
+Research / experimental project.
+
+## License
+
+No license file was identified in the repository. Contact the author before redistributing or reusing these materials.
